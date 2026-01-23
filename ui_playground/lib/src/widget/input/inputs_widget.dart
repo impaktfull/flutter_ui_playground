@@ -30,7 +30,6 @@ class _UiPlaygroundInputsWidgetState extends State<UiPlaygroundInputsWidget> {
     return ImpaktfullUiThemeBuidler(
       builder: (context, theme) => Container(
         color: theme.colors.card,
-        height: 300,
         child: ListView.builder(
           padding: const EdgeInsets.all(16),
           itemCount: inputs.length,

@@ -3,22 +3,29 @@ import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 /// Represents the type of input to generate for a parameter.
-enum InputType {
-  string,
-  boolean,
-  int,
-  double,
-  enumType,
-  color,
-  dateTime,
-  unsupported,
+class InputType {
+  final String name;
+  final bool isEnum;
+
+  const InputType({
+    required this.name,
+    this.isEnum = false,
+  });
+
+  static const InputType string = InputType(name: 'String');
+  static const InputType boolean = InputType(name: 'Boolean');
+  static const InputType int = InputType(name: 'Int');
+  static const InputType double = InputType(name: 'Double');
+  static const InputType color = InputType(name: 'Color');
+  static const InputType dateTime = InputType(name: 'DateTime');
 }
 
 /// Represents an analyzed constructor parameter with its input mapping.
 class AnalyzedParameter {
   final String name;
+  final String? documentationComment;
   final String typeName;
-  final InputType inputType;
+  final InputType? inputType;
   final bool isNullable;
   final bool isRequired;
   final String? defaultValue;
@@ -26,12 +33,13 @@ class AnalyzedParameter {
 
   AnalyzedParameter({
     required this.name,
+    required this.documentationComment,
     required this.typeName,
-    required this.inputType,
     required this.isNullable,
     required this.isRequired,
-    this.defaultValue,
     required this.dartType,
+    this.defaultValue,
+    this.inputType,
   });
 }
 
@@ -85,6 +93,7 @@ class ParameterAnalyzer {
     return AnalyzedParameter(
       name: paramName,
       typeName: typeName,
+      documentationComment: param.documentationComment,
       inputType: inputType,
       isNullable: isNullable,
       isRequired: param.isRequired,
@@ -102,7 +111,7 @@ class ParameterAnalyzer {
     return type.getDisplayString();
   }
 
-  static InputType _mapToInputType(DartType type) {
+  static InputType? _mapToInputType(DartType type) {
     final element = type.element;
     final typeName = _getTypeName(type);
 
@@ -116,7 +125,7 @@ class ParameterAnalyzer {
     if (type.isDartCoreInt) {
       return InputType.int;
     }
-    if (type.isDartCoreDouble) {
+    if (type.isDartCoreDouble || type.isDartCoreNum) {
       return InputType.double;
     }
 
@@ -125,16 +134,16 @@ class ParameterAnalyzer {
       return InputType.color;
     }
 
-    // Check for DateTime
     if (typeName == 'DateTime') {
       return InputType.dateTime;
     }
 
-    // Check for enum types
     if (element is EnumElement) {
-      return InputType.enumType;
+      return InputType(
+        name: typeName,
+        isEnum: true,
+      );
     }
-
-    return InputType.unsupported;
+    return null;
   }
 }

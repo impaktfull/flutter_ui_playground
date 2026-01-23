@@ -5,7 +5,15 @@
 ///
 /// ## Usage
 ///
-/// 1. Add the annotation to your widget:
+/// 1. Create an aggregation file with @UiPlaygroundComponents:
+/// ```dart
+/// @UiPlaygroundComponents()
+/// library;
+///
+/// part 'ui_playground_items.g.dart';
+/// ```
+///
+/// 2. Add @UiPlaygroundComponent to your widgets:
 /// ```dart
 /// @UiPlaygroundComponent(title: 'My Button')
 /// class MyButton extends StatelessWidget {
@@ -15,14 +23,14 @@
 /// }
 /// ```
 ///
-/// 2. Run the generator:
+/// 3. Run the generator:
 /// ```bash
 /// dart run build_runner build
 /// ```
 ///
-/// 3. Generated code will be in `*.g.dart` files.
+/// 4. All generated code will be in the single `.g.dart` file.
 library;
 
-export 'src/ui_playground_generator.dart' show UiPlaygroundComponentGenerator;
+export 'src/ui_playground_generator.dart' show UiPlaygroundAggregatingGenerator;
 export 'src/parameter_analyzer.dart'
     show ParameterAnalyzer, AnalyzedParameter, InputType;

@@ -2,6 +2,8 @@ library;
 
 export 'package:ui_playground_annotations/ui_playground_annotations.dart';
 
+export 'package:impaktfull_ui/impaktfull_ui.dart' show ImpaktfullUiTheme;
+
 /// Models
 export 'src/model/playground_section.dart';
 export 'src/model/item/playground_item.dart';

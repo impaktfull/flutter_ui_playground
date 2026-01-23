@@ -1,40 +1,134 @@
+import 'dart:async';
+
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
+import 'package:glob/glob.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:ui_playground_annotations/ui_playground_annotations.dart';
+import 'package:ui_playground_generator/src/util/extensions/case_extensions.dart';
+import 'package:ui_playground_generator/src/writor/input/input_code_writor.dart';
 
 import 'parameter_analyzer.dart';
 
-/// Generator that creates UiPlaygroundItem classes for widgets annotated
-/// with @UiPlaygroundComponent.
-class UiPlaygroundComponentGenerator
-    extends GeneratorForAnnotation<UiPlaygroundComponent> {
+/// Type checker for @UiPlaygroundComponent annotation
+final _componentChecker = TypeChecker.fromUrl(
+  'package:ui_playground_annotations/src/component.dart#UiPlaygroundComponent',
+);
+
+/// Generator that automatically finds all @UiPlaygroundComponent annotated
+/// classes and generates playground items for them.
+///
+/// Triggered by @UiPlaygroundComponents annotation on a class.
+class UiPlaygroundAggregatingGenerator
+    extends GeneratorForAnnotation<UiPlaygroundComponents> {
   @override
-  String generateForAnnotatedElement(
+  Future<String> generateForAnnotatedElement(
     Element element,
     ConstantReader annotation,
     BuildStep buildStep,
-  ) {
-    if (element is! ClassElement) {
-      throw InvalidGenerationSourceError(
-        '@UiPlaygroundComponent can only be applied to classes.',
-        element: element,
-      );
+  ) async {
+    final buffer = StringBuffer();
+    final imports = <String>{};
+    final generatedCode = <String>[];
+    final itemClassNames = <String>[];
+
+    // Find all Dart files in lib/
+    final dartFiles = Glob('lib/**.dart');
+
+    await for (final input in buildStep.findAssets(dartFiles)) {
+      // Skip generated files
+      if (input.path.endsWith('.g.dart') ||
+          input.path.endsWith('.ui_playground.dart')) {
+        continue;
+      }
+
+      // Try to resolve the library
+      final LibraryElement? library;
+      try {
+        library = await buildStep.resolver.libraryFor(input);
+      } catch (_) {
+        continue;
+      }
+
+      // Find all classes with @UiPlaygroundComponent using LibraryReader
+      final libraryReader = LibraryReader(library);
+      for (final classElement in libraryReader.classes) {
+        final componentAnnotation = _componentChecker.firstAnnotationOf(
+          classElement,
+        );
+        if (componentAnnotation != null) {
+          final reader = ConstantReader(componentAnnotation);
+          final code = _generateCodeForClass(classElement, reader);
+          if (code != null) {
+            generatedCode.add(code.code);
+            itemClassNames.add(code.itemClassName);
+            _addImportForElement(classElement, imports);
+          }
+        }
+      }
     }
 
-    final classElement = element;
+    if (generatedCode.isEmpty) {
+      return '// No @UiPlaygroundComponent annotations found';
+    }
+
+    // Write imports - this is a standalone library file
+    buffer.writeln("import 'package:flutter/material.dart';");
+    buffer.writeln("import 'package:ui_playground/ui_playground.dart';");
+    for (final import in imports.toList()..sort()) {
+      buffer.writeln(import);
+    }
+    buffer.writeln();
+
+    // Write the aggregating class
+    buffer.writeln(
+      '// **************************************************************************',
+    );
+    buffer.writeln('// GeneratedUiPlaygroundComponents');
+    buffer.writeln(
+      '// **************************************************************************',
+    );
+    buffer.writeln();
+    buffer.writeln('class GeneratedUiPlaygroundComponents {');
+    buffer.writeln('  GeneratedUiPlaygroundComponents._();');
+    buffer.writeln();
+    buffer.writeln('  static List<UiPlaygroundItem> get items => [');
+    for (final itemClassName in itemClassNames) {
+      buffer.writeln('    $itemClassName(),');
+    }
+    buffer.writeln('  ];');
+    buffer.writeln('}');
+    buffer.writeln();
+    buffer.writeln();
+
+    // Write generated code for each component
+    for (final code in generatedCode) {
+      buffer.writeln(code);
+    }
+    return buffer.toString();
+  }
+
+  void _addImportForElement(ClassElement classElement, Set<String> imports) {
+    final library = classElement.library;
+    final uri = library.identifier;
+    if (uri.startsWith('package:')) {
+      imports.add("import '$uri';");
+    }
+  }
+
+  _GeneratedCode? _generateCodeForClass(
+    ClassElement classElement,
+    ConstantReader annotation,
+  ) {
     final classNameNullable = classElement.name;
     if (classNameNullable == null || classNameNullable.isEmpty) {
-      throw InvalidGenerationSourceError(
-        'Class must have a name.',
-        element: element,
-      );
+      return null;
     }
     final className = classNameNullable;
 
     // Get annotation values
     final title =
-        annotation.peek('title')?.stringValue ?? _formatTitle(className);
+        annotation.peek('title')?.stringValue ?? className.toTitleCase();
     final excludeParams =
         annotation
             .peek('excludeParams')
@@ -51,210 +145,35 @@ class UiPlaygroundComponentGenerator
             : null);
 
     if (constructor == null) {
-      throw InvalidGenerationSourceError(
-        'Class $className must have a constructor.',
-        element: element,
-      );
+      return null;
     }
 
-    // Analyze parameters - get the formal parameters from the constructor
+    // Analyze parameters
     final formalParameters = constructor.formalParameters;
     final parameters = ParameterAnalyzer.analyze(
       formalParameters,
       excludeParams: ['key', ...excludeParams],
     );
 
-    // Generate code
-    return _generateCode(
-      className: className,
-      title: title,
-      parameters: parameters,
-      classElement: classElement,
-    );
-  }
-
-  String _formatTitle(String className) {
-    // Remove common prefixes
-    var title = className;
-    if (title.startsWith('ImpaktfullUi')) {
-      title = title.substring('ImpaktfullUi'.length);
-    }
-
-    // Add spaces before capital letters
-    title = title.replaceAllMapped(
-      RegExp(r'(?<=[a-z])[A-Z]'),
-      (match) => ' ${match.group(0)}',
-    );
-
-    return title;
-  }
-
-  String _generateCode({
-    required String className,
-    required String title,
-    required List<AnalyzedParameter> parameters,
-    required ClassElement classElement,
-  }) {
     final itemClassName = '${className}PlaygroundItem';
-    final variantClassName = '${className}PlaygroundVariant';
-    final inputsClassName = '${className}PlaygroundInputs';
 
-    final buffer = StringBuffer();
-
-    // Generate Item class
-    buffer.writeln('/// Generated UiPlaygroundItem for $className');
-    buffer.writeln('class $itemClassName extends UiPlaygroundItem {');
-    buffer.writeln('  @override');
-    buffer.writeln("  String get title => '$title';");
-    buffer.writeln();
-    buffer.writeln('  @override');
-    buffer.writeln('  List<UiPlaygroundVariant> get variants => [');
-    buffer.writeln('    $variantClassName(),');
-    buffer.writeln('  ];');
-    buffer.writeln('}');
-    buffer.writeln();
-
-    // Generate Variant class
-    buffer.writeln('/// Generated UiPlaygroundVariant for $className');
-    buffer.writeln(
-      'class $variantClassName extends UiPlaygroundVariant<$inputsClassName> {',
+    return _GeneratedCode(
+      code: InputCodeWritor.generateCode(
+        className: className,
+        title: title,
+        parameters: parameters,
+      ),
+      itemClassName: itemClassName,
     );
-    buffer.writeln('  @override');
-    buffer.writeln("  String get title => 'Default';");
-    buffer.writeln();
-    buffer.writeln('  @override');
-    buffer.writeln(
-      '  Widget build(BuildContext context, $inputsClassName inputs) {',
-    );
-    buffer.writeln('    return $className(');
-    for (final param in parameters) {
-      buffer.writeln('      ${param.name}: ${_generateInputAccess(param)},');
-    }
-    buffer.writeln('    );');
-    buffer.writeln('  }');
-    buffer.writeln();
-    buffer.writeln('  @override');
-    buffer.writeln('  $inputsClassName inputs() => $inputsClassName();');
-    buffer.writeln('}');
-    buffer.writeln();
-
-    // Generate Inputs class
-    buffer.writeln('/// Generated UiPlaygroundInputs for $className');
-    buffer.writeln('class $inputsClassName extends UiPlaygroundInputs {');
-
-    // Generate input fields
-    for (final param in parameters) {
-      buffer.writeln(_generateInputField(param));
-    }
-
-    buffer.writeln();
-    buffer.writeln('  @override');
-    buffer.writeln(
-      '  List<UiPlaygroundInputItem<dynamic>> buildInputItems() => [',
-    );
-    for (final param in parameters) {
-      buffer.writeln('    ${param.name},');
-    }
-    buffer.writeln('  ];');
-    buffer.writeln('}');
-
-    return buffer.toString();
   }
+}
 
-  String _generateInputAccess(AnalyzedParameter param) {
-    switch (param.inputType) {
-      case InputType.string:
-        return 'inputs.${param.name}.value ?? ${_getDefaultValue(param)}';
-      case InputType.boolean:
-        return 'inputs.${param.name}.value ?? ${_getDefaultValue(param)}';
-      case InputType.int:
-        return 'inputs.${param.name}.value ?? ${_getDefaultValue(param)}';
-      case InputType.double:
-        return 'inputs.${param.name}.value ?? ${_getDefaultValue(param)}';
-      case InputType.enumType:
-        return 'inputs.${param.name}.value ?? ${_getDefaultValue(param)}';
-      case InputType.color:
-        return 'inputs.${param.name}.value ?? ${_getDefaultValue(param)}';
-      case InputType.dateTime:
-        return 'inputs.${param.name}.value ?? ${_getDefaultValue(param)}';
-      case InputType.unsupported:
-        return _getDefaultValue(param);
-    }
-  }
+class _GeneratedCode {
+  final String code;
+  final String itemClassName;
 
-  String _getDefaultValue(AnalyzedParameter param) {
-    if (param.defaultValue != null) {
-      return param.defaultValue!;
-    }
-    if (param.isNullable) {
-      return 'null';
-    }
-    switch (param.inputType) {
-      case InputType.string:
-        return "''";
-      case InputType.boolean:
-        return 'false';
-      case InputType.int:
-        return '0';
-      case InputType.double:
-        return '0.0';
-      case InputType.enumType:
-        return '${param.typeName}.values.first';
-      case InputType.color:
-        return 'const Color(0xFF000000)';
-      case InputType.dateTime:
-        return 'DateTime.now()';
-      case InputType.unsupported:
-        return 'null';
-    }
-  }
-
-  String _generateInputField(AnalyzedParameter param) {
-    final label = _formatLabel(param.name);
-
-    switch (param.inputType) {
-      case InputType.string:
-        final defaultVal =
-            param.defaultValue ??
-            (param.isNullable ? 'null' : "'{${param.name}}'");
-        return "  final ${param.name} = UiPlaygroundStringInput(\n    '$label',\n    initialValue: $defaultVal,\n  );";
-      case InputType.boolean:
-        final defaultVal =
-            param.defaultValue ?? (param.isNullable ? 'null' : 'false');
-        return "  final ${param.name} = UiPlaygroundBooleanInput(\n    '$label',\n    initialValue: $defaultVal,\n  );";
-      case InputType.int:
-        final defaultVal =
-            param.defaultValue ?? (param.isNullable ? 'null' : '0');
-        return "  final ${param.name} = UiPlaygroundIntInput(\n    '$label',\n    initialValue: $defaultVal,\n  );";
-      case InputType.double:
-        final defaultVal =
-            param.defaultValue ?? (param.isNullable ? 'null' : '0.0');
-        return "  final ${param.name} = UiPlaygroundDoubleInput(\n    '$label',\n    initialValue: $defaultVal,\n  );";
-      case InputType.enumType:
-        final defaultVal =
-            param.defaultValue ?? '${param.typeName}.values.first';
-        return "  final ${param.name} = UiPlaygroundEnumInput<${param.typeName}>(\n    '$label',\n    initialValue: $defaultVal,\n    options: ${param.typeName}.values,\n  );";
-      case InputType.color:
-        final defaultVal =
-            param.defaultValue ??
-            (param.isNullable ? 'null' : 'const Color(0xFF000000)');
-        return "  final ${param.name} = UiPlaygroundColorInput(\n    '$label',\n    initialValue: $defaultVal,\n  );";
-      case InputType.dateTime:
-        final defaultVal =
-            param.defaultValue ??
-            (param.isNullable ? 'null' : 'DateTime.now()');
-        return "  final ${param.name} = UiPlaygroundDateTimeInput(\n    '$label',\n    initialValue: $defaultVal,\n  );";
-      case InputType.unsupported:
-        return '  // Unsupported type for parameter: ${param.name} (${param.typeName})';
-    }
-  }
-
-  String _formatLabel(String name) {
-    // Convert camelCase to Title Case with spaces
-    final formatted = name.replaceAllMapped(
-      RegExp(r'(?<=[a-z])[A-Z]'),
-      (match) => ' ${match.group(0)}',
-    );
-    return formatted[0].toUpperCase() + formatted.substring(1);
-  }
+  _GeneratedCode({
+    required this.code,
+    required this.itemClassName,
+  });
 }

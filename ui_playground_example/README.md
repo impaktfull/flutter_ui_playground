@@ -6,8 +6,9 @@ Example Flutter application demonstrating the UI Playground system with code gen
 
 This app shows how to:
 1. Annotate widgets with `@UiPlaygroundComponent`
-2. Run the code generator to create playground items
-3. Display components in the `UiPlayground` widget
+2. Create an aggregation file with `@UiPlaygroundComponents`
+3. Run the code generator to create playground items in a single file
+4. Display components in the `UiPlayground` widget
 
 ## Getting Started
 
@@ -40,10 +41,11 @@ flutter run
 ```
 ui_playground_example/
 ├── lib/
-│   ├── main.dart              # App entry point with UiPlayground widget
+│   ├── main.dart                              # App entry point
+│   ├── ui_playground_items.dart               # Trigger file with @UiPlaygroundComponents
+│   ├── ui_playground_items.ui_playground.dart # Generated file (complete standalone library)
 │   └── component/
-│       ├── button.dart        # Annotated widget
-│       └── button.g.dart      # Generated playground item
+│       └── button.dart                        # Annotated widget
 ├── pubspec.yaml
 └── README.md
 ```
@@ -56,8 +58,6 @@ ui_playground_example/
 // lib/component/my_card.dart
 import 'package:flutter/material.dart';
 import 'package:ui_playground/ui_playground.dart';
-
-part 'my_card.g.dart';
 
 @UiPlaygroundComponent(title: 'Card')
 class MyCard extends StatelessWidget {
@@ -97,25 +97,29 @@ class MyCard extends StatelessWidget {
 dart run build_runner build
 ```
 
-### 3. Add to Playground
+That's it! The generator automatically:
+- Finds all `@UiPlaygroundComponent` annotated widgets
+- Generates imports for each component
+- Creates all playground items in a single file
+
+### 3. Use in Playground
 
 ```dart
 // lib/main.dart
 import 'package:ui_playground/ui_playground.dart';
-import 'component/button.dart';
-import 'component/my_card.dart';
+import 'ui_playground_items.ui_playground.dart';
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return UiPlayground(
+    return UiPlaygroundApp(
       title: 'UI Playground Example',
       sections: [
         UiPlaygroundSection(
           title: 'Components',
           items: [
             ButtonPlaygroundItem(),
-            MyCardPlaygroundItem(),  // Add your new component
+            MyCardPlaygroundItem(),  // Generated automatically
           ],
         ),
       ],

@@ -14,3 +14,19 @@ class UiPlaygroundComponent {
 
   const UiPlaygroundComponent({this.title, this.excludeParams = const []});
 }
+
+/// Annotation to mark a class as the aggregation point for playground components.
+///
+/// The generator will automatically find all classes annotated with
+/// @UiPlaygroundComponent and generate playground items for them.
+///
+/// Example:
+/// ```dart
+/// @UiPlaygroundComponents()
+/// class AppComponents {
+///   static List<UiPlaygroundItem> get items => GeneratedUiPlaygroundComponents.items;
+/// }
+/// ```
+class UiPlaygroundComponents {
+  const UiPlaygroundComponents();
+}

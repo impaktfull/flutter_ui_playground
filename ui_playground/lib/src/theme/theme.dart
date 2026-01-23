@@ -1,23 +1,57 @@
 import 'dart:ui';
 
+import 'package:ui_playground/ui_playground.dart';
+
 class UiPlaygroundTheme {
-  final Color primaryColor;
-  final Color accentColor;
-  final Color secondaryColor;
-  final Color? canvasColor;
-  final Color? cardColor;
-  final Color? textColor;
-  final Color? textSecondaryColor;
-  final Color? textTertiaryColor;
+  final Color _primary;
+  final Color _accent;
+  final Color _secondary;
+  final Color? _canvas;
+  final Color? _card;
+  final Color? _text;
+  final Color? _textSecondary;
+  final Color? _textTertiary;
+
+  static ImpaktfullUiTheme<Object>? _impaktfullUiTheme;
+
+  static Color get primaryColor => _impaktfullUiTheme!.colors.primary;
+
+  static Color get accentColor => _impaktfullUiTheme!.colors.accent;
+
+  static Color get secondaryColor => _impaktfullUiTheme!.colors.secondary;
 
   const UiPlaygroundTheme({
-    required this.primaryColor,
-    required this.accentColor,
-    required this.secondaryColor,
-    this.canvasColor,
-    this.cardColor,
-    this.textColor,
-    this.textSecondaryColor,
-    this.textTertiaryColor,
-  });
+    required Color primaryColor,
+    required Color accentColor,
+    required Color secondaryColor,
+    Color? canvasColor,
+    Color? cardColor,
+    Color? textColor,
+    Color? textSecondaryColor,
+    Color? textTertiaryColor,
+  }) : _textTertiary = textTertiaryColor,
+       _textSecondary = textSecondaryColor,
+       _text = textColor,
+       _card = cardColor,
+       _canvas = canvasColor,
+       _secondary = secondaryColor,
+       _accent = accentColor,
+       _primary = primaryColor;
+
+  static void configure(ImpaktfullUiTheme<Object> impaktfullUiTheme) {
+    _impaktfullUiTheme = impaktfullUiTheme;
+  }
+}
+
+extension UiPlaygroundThemeExtension on UiPlaygroundTheme {
+  ImpaktfullUiTheme? get impaktfullUiTheme => ImpaktfullUiTheme.custom(
+    primary: _primary,
+    accent: _accent,
+    secondary: _secondary,
+    canvas: _canvas,
+    card: _card,
+    text: _text,
+    textSecondary: _textSecondary,
+    textTertiary: _textTertiary,
+  );
 }

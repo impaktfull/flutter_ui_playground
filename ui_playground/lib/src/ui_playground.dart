@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:impaktfull_ui/impaktfull_ui.dart';
-import 'package:ui_playground/src/extension/theme/theme_extension.dart';
 import 'package:ui_playground/src/model/playground_section.dart';
 import 'package:ui_playground/src/screen/home_screen.dart';
 import 'package:ui_playground/src/theme/theme.dart';
@@ -20,9 +19,14 @@ class UiPlaygroundApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final optionalTheme = ImpaktfullUiTheme.maybeOf(context);
+    final impaktfullUiTheme =
+        optionalTheme ??
+        theme?.impaktfullUiTheme ??
+        ImpaktfullUiTheme.getDefault();
+    UiPlaygroundTheme.configure(impaktfullUiTheme);
     return ImpaktfullUiApp(
       title: title,
-      impaktfullUiTheme: optionalTheme ?? theme?.impaktfullUiTheme,
+      impaktfullUiTheme: impaktfullUiTheme,
       home: HomeScreen(
         title: title,
         sections: sections,

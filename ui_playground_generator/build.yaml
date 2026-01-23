@@ -2,7 +2,6 @@ builders:
   ui_playground_builder:
     import: "package:ui_playground_generator/builder.dart"
     builder_factories: ["uiPlaygroundBuilder"]
-    build_extensions: {".dart": [".ui_playground.g.part"]}
+    build_extensions: {".dart": [".ui_playground.dart"]}
     auto_apply: dependents
-    build_to: cache
-    applies_builders: ["source_gen|combining_builder"]
+    build_to: source

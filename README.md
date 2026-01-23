@@ -48,12 +48,21 @@ dev_dependencies:
     path: ../ui_playground_generator
 ```
 
-2. Annotate your widget:
+2. Create a simple trigger file:
 
 ```dart
-import 'package:ui_playground/ui_playground.dart';
+// lib/ui_playground_items.dart
+@UiPlaygroundComponents()
+library;
 
-part 'my_button.g.dart';
+import 'package:ui_playground/ui_playground.dart';
+```
+
+3. Annotate your widgets:
+
+```dart
+// lib/component/my_button.dart
+import 'package:ui_playground/ui_playground.dart';
 
 @UiPlaygroundComponent(title: 'My Button')
 class MyButton extends StatelessWidget {
@@ -67,27 +76,31 @@ class MyButton extends StatelessWidget {
 }
 ```
 
-3. Run the generator:
+4. Run the generator:
 
 ```bash
 dart run build_runner build
 ```
 
-4. Use the generated playground item in your app:
+5. Import and use the generated file:
 
 ```dart
-UiPlayground(
+import 'ui_playground_items.ui_playground.dart';
+
+UiPlaygroundApp(
   title: 'My App Playground',
   sections: [
     UiPlaygroundSection(
       title: 'Buttons',
       items: [
-        MyButtonPlaygroundItem(),
+        MyButtonPlaygroundItem(),  // Generated automatically
       ],
     ),
   ],
 )
 ```
+
+The generator automatically finds all `@UiPlaygroundComponent` widgets, generates all imports, and creates a complete standalone file.
 
 ## Development
 

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:impaktfull_ui/impaktfull_ui.dart';
 import 'package:ui_playground/ui_playground.dart';
 
-part 'button.g.dart';
-
 @UiPlaygroundComponent(
   title: 'Button',
 )
