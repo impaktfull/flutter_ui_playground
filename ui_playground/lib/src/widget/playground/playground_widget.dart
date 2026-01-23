@@ -37,21 +37,47 @@ class _UiPlaygroundWidgetState extends State<UiPlaygroundWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return ImpaktfullUiAutoLayout.vertical(
-      children: [
-        Expanded(
-          child: Center(
-            child: widget.variant.build(
-              context,
-              inputs,
+    return ImpaktfullUiResponsiveLayout(
+      small: (context) => ImpaktfullUiAutoLayout.vertical(
+        children: [
+          Expanded(
+            child: Center(
+              child: widget.variant.build(
+                context,
+                inputs,
+              ),
             ),
           ),
-        ),
-        ImpaktfullUiDivider(),
-        UiPlaygroundInputsWidget(
-          inputs: inputs,
-        ),
-      ],
+          ImpaktfullUiDivider(),
+          SizedBox(
+            height: 300,
+            child: UiPlaygroundInputsWidget(
+              key: ValueKey(inputs),
+              inputs: inputs,
+            ),
+          ),
+        ],
+      ),
+      medium: (context) => ImpaktfullUiAutoLayout.horizontal(
+        children: [
+          Expanded(
+            child: Center(
+              child: widget.variant.build(
+                context,
+                inputs,
+              ),
+            ),
+          ),
+          ImpaktfullUiDivider(vertical: true),
+          SizedBox(
+            width: 350,
+            child: UiPlaygroundInputsWidget(
+              key: ValueKey(inputs),
+              inputs: inputs,
+            ),
+          ),
+        ],
+      ),
     );
   }
 

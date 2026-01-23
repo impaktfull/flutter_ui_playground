@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:impaktfull_ui/impaktfull_ui.dart';
 import 'package:ui_playground/src/model/item/playground_inputs.dart';
 
-class UiPlaygroundBoolInput extends UiPlaygroundInputItem<bool> {
+class UiPlaygroundBooleanInput extends UiPlaygroundInputItem<bool> {
   final bool allowNull;
 
-  UiPlaygroundBoolInput(
+  UiPlaygroundBooleanInput(
     super.label, {
     super.initialValue,
     super.extraInfo,

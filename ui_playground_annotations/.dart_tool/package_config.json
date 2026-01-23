@@ -1,0 +1,22 @@
+{
+  "configVersion": 2,
+  "packages": [
+    {
+      "name": "lints",
+      "rootUri": "file:///Users/vanlooverenkoen/.pub-cache/hosted/pub.dev/lints-6.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.8"
+    },
+    {
+      "name": "ui_playground_annotations",
+      "rootUri": "../",
+      "packageUri": "lib/",
+      "languageVersion": "3.10"
+    }
+  ],
+  "generator": "pub",
+  "generatorVersion": "3.10.1",
+  "flutterRoot": "file:///Users/vanlooverenkoen/fvm/versions/stable",
+  "flutterVersion": "3.38.3",
+  "pubCache": "file:///Users/vanlooverenkoen/.pub-cache"
+}

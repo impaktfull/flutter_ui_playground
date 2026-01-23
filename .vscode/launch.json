@@ -8,7 +8,7 @@
       "name": "dev (macos)",
       "request": "launch",
       "type": "dart",
-      "program": "ui_playground/example/lib/main.dart",
+      "program": "ui_playground_example/lib/main.dart",
       "args": [
         "-d",
         "macos"
@@ -18,7 +18,7 @@
       "name": "dev (chrome)",
       "request": "launch",
       "type": "dart",
-      "program": "ui_playground/example/lib/main.dart",
+      "program": "ui_playground_example/lib/main.dart",
       "args": [
         "-d",
         "Chrome"
@@ -28,7 +28,7 @@
       "name": "dev",
       "request": "launch",
       "type": "dart",
-      "program": "ui_playground/example/lib/main.dart",
+      "program": "ui_playground_example/lib/main.dart",
     }
   ]
 }

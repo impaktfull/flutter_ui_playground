@@ -1,0 +1,25 @@
+name: ui_playground_generator
+description: "A build_runner code generator that creates UI Playground items from annotated widget classes."
+version: 0.0.1
+homepage: https://github.com/impaktfull/flutter_ui_playground
+
+environment:
+  sdk: ^3.10.1
+
+dependencies:
+  build: ^4.0.4
+  source_gen: ^4.2.0
+  analyzer: ^10.0.1
+  code_builder: ^4.10.0
+  glob: ^2.1.2
+  ui_playground_annotations: ^0.0.1
+
+dev_dependencies:
+  test: ^1.26.0
+  lints: ^6.0.0
+  build_runner: ^2.4.9
+  build_test: ^3.5.5
+
+dependency_overrides:
+  ui_playground_annotations:
+    path: ../ui_playground_annotations

@@ -1,3 +1,9 @@
-## 0.0.1
+# 0.0.2
 
-* TODO: Describe initial release.
+## Fixed
+- Remove unwanted exported dependency
+- Formatting
+
+# 0.0.1
+
+Initial pre-release.

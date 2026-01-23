@@ -1,6 +1,6 @@
 name: ui_playground_example
 description: "Demonstrates how to use the ui_playground plugin."
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: none
 
 environment:
   sdk: ^3.10.1
@@ -8,14 +8,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  impaktfull_ui: ^0.76.3
+  impaktfull_ui: ^0.78.0
   ui_playground:
-    path: ../
+    path: ../ui_playground
+  ui_playground_annotations:
+    path: ../ui_playground_annotations
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  build_runner: ^2.4.9
+  ui_playground_generator:
+    path: ../ui_playground_generator
 
 flutter:
   uses-material-design: true
