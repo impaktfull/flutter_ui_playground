@@ -1,5 +1,7 @@
 library;
 
+export 'package:ui_playground_annotations/ui_playground_annotations.dart';
+
 /// Models
 export 'src/model/playground_section.dart';
 export 'src/model/item/playground_item.dart';
@@ -15,6 +17,9 @@ export 'src/inputs/boolean/boolean_input.dart';
 export 'src/inputs/color/color_input.dart';
 export 'src/inputs/datetime/datetime_input.dart';
 export 'src/inputs/double/double_input.dart';
+
+/// Theme
+export 'src/theme/theme.dart';
 
 // ui_playground
 export 'src/ui_playground.dart';

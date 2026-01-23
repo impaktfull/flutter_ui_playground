@@ -1,0 +1,14 @@
+{
+  "roots": [
+    "ui_playground_annotations"
+  ],
+  "packages": [
+    {
+      "name": "ui_playground_annotations",
+      "version": "0.0.1",
+      "dependencies": [],
+      "devDependencies": []
+    }
+  ],
+  "configVersion": 1
+}

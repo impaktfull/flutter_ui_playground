@@ -2,12 +2,21 @@ name: ui_playground_generator
 description: "A tool to generate UI Playground code from annotations."
 version: 0.0.1
 homepage:
+publish_to: none
 
 environment:
   sdk: ^3.10.1
 
 dependencies:
+  build: ^4.0.4
+  source_gen: ^4.2.0
+  analyzer: ^10.0.1
+  code_builder: ^4.10.0
+  ui_playground_annotations:
+    path: ../ui_playground_annotations
 
 dev_dependencies:
-  test: ^1.29.0
+  test: ^1.26.0
   lints: ^6.0.0
+  build_runner: ^2.4.9
+  build_test: ^3.5.5

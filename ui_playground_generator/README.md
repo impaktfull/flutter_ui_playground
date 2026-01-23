@@ -1,39 +1,167 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# ui_playground_generator
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+A build_runner code generator that creates UI Playground items from annotated widget classes.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+## Purpose
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+This package automatically generates `UiPlaygroundItem`, `UiPlaygroundVariant`, and `UiPlaygroundInputs` classes for widgets annotated with `@UiPlaygroundComponent`. This eliminates the boilerplate of manually creating playground items.
 
-## Features
+## Installation
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+Add to your `pubspec.yaml`:
 
-## Getting started
+```yaml
+dependencies:
+  ui_playground:
+    path: ../ui_playground
+  ui_playground_annotations:
+    path: ../ui_playground_annotations
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+dev_dependencies:
+  build_runner: ^2.4.9
+  ui_playground_generator:
+    path: ../ui_playground_generator
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+### 1. Annotate Your Widget
 
 ```dart
-const like = 'sample';
+import 'package:flutter/material.dart';
+import 'package:ui_playground/ui_playground.dart';
+
+part 'my_button.g.dart';  // Required: Include the generated part file
+
+@UiPlaygroundComponent(
+  title: 'My Button',
+  excludeParams: ['onTap'],  // Exclude callback parameters
+)
+class MyButton extends StatelessWidget {
+  final String title;
+  final bool isEnabled;
+  final VoidCallback? onTap;
+
+  const MyButton({
+    required this.title,
+    this.isEnabled = true,
+    this.onTap,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: isEnabled ? onTap : null,
+      child: Text(title),
+    );
+  }
+}
 ```
 
-## Additional information
+### 2. Run the Generator
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```bash
+dart run build_runner build
+```
+
+Or use watch mode for continuous generation:
+
+```bash
+dart run build_runner watch
+```
+
+### 3. Use the Generated Item
+
+The generator creates a file `my_button.g.dart` containing:
+
+```dart
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'my_button.dart';
+
+class MyButtonPlaygroundItem extends UiPlaygroundItem {
+  @override
+  String get title => 'My Button';
+
+  @override
+  List<UiPlaygroundVariant> get variants => [MyButtonPlaygroundVariant()];
+}
+
+class MyButtonPlaygroundVariant extends UiPlaygroundVariant<MyButtonPlaygroundInputs> {
+  @override
+  String get title => 'Default';
+
+  @override
+  Widget build(BuildContext context, MyButtonPlaygroundInputs inputs) {
+    return MyButton(
+      title: inputs.title.value ?? '',
+      isEnabled: inputs.isEnabled.value ?? true,
+    );
+  }
+
+  @override
+  MyButtonPlaygroundInputs inputs() => MyButtonPlaygroundInputs();
+}
+
+class MyButtonPlaygroundInputs extends UiPlaygroundInputs {
+  final title = UiPlaygroundStringInput('Title', initialValue: '{title}');
+  final isEnabled = UiPlaygroundBooleanInput('Is Enabled', initialValue: true);
+
+  @override
+  List<UiPlaygroundInputItem<dynamic>> buildInputItems() => [title, isEnabled];
+}
+```
+
+## Supported Parameter Types
+
+The generator automatically maps Dart types to playground inputs:
+
+| Dart Type | Generated Input | Notes |
+|-----------|-----------------|-------|
+| `String` | `UiPlaygroundStringInput` | |
+| `bool` | `UiPlaygroundBooleanInput` | |
+| `int` | `UiPlaygroundIntInput` | |
+| `double` | `UiPlaygroundDoubleInput` | |
+| `Enum` | `UiPlaygroundEnumInput<T>` | Auto-detects enum types |
+| `Color` | `UiPlaygroundColorInput` | |
+| `DateTime` | `UiPlaygroundDateTimeInput` | |
+
+### Automatically Excluded Parameters
+
+The following parameters are automatically excluded:
+- `key` (Widget key)
+- Function types (callbacks like `VoidCallback`, `Function`)
+
+### Manually Excluding Parameters
+
+Use `excludeParams` to exclude additional parameters:
+
+```dart
+@UiPlaygroundComponent(
+  excludeParams: ['onTap', 'controller', 'focusNode'],
+)
+class MyWidget extends StatelessWidget { ... }
+```
+
+## Package Structure
+
+```
+ui_playground_generator/
+├── lib/
+│   ├── builder.dart                    # Builder factory for build_runner
+│   ├── ui_playground_generator.dart    # Library exports
+│   └── src/
+│       ├── ui_playground_generator.dart  # Main generator logic
+│       └── parameter_analyzer.dart       # Parameter type analysis
+├── build.yaml                          # Build configuration
+└── pubspec.yaml
+```
+
+## Why a Separate Annotations Package?
+
+The generator depends on `ui_playground_annotations` (pure Dart) instead of `ui_playground` (Flutter) because:
+
+1. **build_runner runs in pure Dart** - It cannot resolve Flutter dependencies
+2. **Compilation would fail** - Types like `Color`, `Widget`, `VoidCallback` are not available in the Dart VM
+3. **Separation of concerns** - Annotations are metadata and don't need Flutter runtime
