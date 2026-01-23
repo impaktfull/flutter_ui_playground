@@ -19,7 +19,10 @@ class UiPlaygroundApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final app = ImpaktfullUiApp.maybeOf(context);
-    final impaktfullUiTheme = app?.impaktfullUiTheme ?? theme?.impaktfullUiTheme ?? ImpaktfullUiTheme.getDefault();
+    final impaktfullUiTheme =
+        app?.impaktfullUiTheme ??
+        theme?.impaktfullUiTheme ??
+        ImpaktfullUiTheme.getDefault();
     UiPlaygroundTheme.configure(impaktfullUiTheme);
     return ImpaktfullUiApp(
       impaktfullUiTheme: impaktfullUiTheme,

@@ -12,11 +12,14 @@ dependencies:
   analyzer: ^10.0.1
   code_builder: ^4.10.0
   glob: ^2.1.2
-  ui_playground_annotations:
-    path: ../ui_playground_annotations
+  ui_playground_annotations: ^0.0.1
 
 dev_dependencies:
   test: ^1.26.0
   lints: ^6.0.0
   build_runner: ^2.4.9
   build_test: ^3.5.5
+
+dependency_overrides:
+  ui_playground_annotations:
+    path: ../ui_playground_annotations
