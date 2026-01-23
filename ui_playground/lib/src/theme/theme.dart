@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:ui_playground/ui_playground.dart';
+import 'package:impaktfull_ui/impaktfull_ui.dart';
 
 class UiPlaygroundTheme {
   final Color _primary;
