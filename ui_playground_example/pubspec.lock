@@ -275,10 +275,11 @@ packages:
   impaktfull_ui:
     dependency: "direct main"
     description:
-      path: "/Users/vanlooverenkoen/work/open_source/impaktfull/flutter_impaktfull_ui"
-      relative: false
-    source: path
-    version: "0.76.3"
+      name: impaktfull_ui
+      sha256: a8b3f273255b7db00595e2ecb6aec3ba36a9aa3190e391c5c79949dfe0e476d3
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.78.0"
   impaktfull_ui_figma_sync:
     dependency: transitive
     description:
