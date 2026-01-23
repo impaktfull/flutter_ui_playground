@@ -2,7 +2,6 @@ name: ui_playground_annotations
 description: "Annotations for UI Playground code generation."
 version: 0.0.1
 homepage:
-publish_to: none
 
 environment:
   sdk: ^3.10.1

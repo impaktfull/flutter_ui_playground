@@ -8,9 +8,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # impaktfull_ui: ^0.76.3
-  impaktfull_ui:
-    path: /Users/vanlooverenkoen/work/open_source/impaktfull/flutter_impaktfull_ui
+  impaktfull_ui: ^0.77.0
   ui_playground:
     path: ../ui_playground
   ui_playground_annotations:
