@@ -25,19 +25,18 @@ dev_dependencies:
 
 ## Usage
 
-### 1. Create a Trigger File
-
-Create a simple file that triggers the generation:
+### 1. Create an Aggregation Class
 
 ```dart
-// lib/ui_playground_items.dart
-@UiPlaygroundComponents()
-library;
-
+// lib/ui_playground/components.dart
 import 'package:ui_playground/ui_playground.dart';
-```
+import 'package:my_app/ui_playground/components.ui_playground.dart';
 
-That's it! No `part` directives, no manual imports needed.
+@UiPlaygroundComponents()
+class AppComponents {
+  static List<UiPlaygroundItem> get items => GeneratedUiPlaygroundComponents.items;
+}
+```
 
 ### 2. Annotate Your Widgets
 
@@ -84,23 +83,58 @@ Or use watch mode:
 dart run build_runner watch
 ```
 
-### 4. Use the Generated File
-
-The generator creates a complete standalone file `ui_playground_items.ui_playground.dart` with all imports included:
+### 4. Use in Your App
 
 ```dart
-import 'package:my_app/ui_playground_items.ui_playground.dart';
+import 'package:my_app/ui_playground/components.dart';
 
 UiPlaygroundApp(
   sections: [
     UiPlaygroundSection(
       title: 'Buttons',
-      items: [
-        MyButtonPlaygroundItem(),
-      ],
+      items: AppComponents.items,
     ),
   ],
 )
+```
+
+## External Components
+
+For widgets from external packages you cannot annotate, use `UiPlaygroundComponentConfig`:
+
+```dart
+import 'package:external_ui/external_ui.dart';
+
+@UiPlaygroundComponents(
+  components: [
+    UiPlaygroundComponentConfig(
+      ExternalButton,
+      title: 'External Button',
+      excludeParams: ['onTap', 'controller'],
+    ),
+    UiPlaygroundComponentConfig(ExternalCard),
+  ],
+)
+class AppComponents {
+  static List<UiPlaygroundItem> get items => GeneratedUiPlaygroundComponents.items;
+}
+```
+
+### componentsOnly Mode
+
+To only use external components and skip scanning for `@UiPlaygroundComponent`:
+
+```dart
+@UiPlaygroundComponents(
+  componentsOnly: true,
+  components: [
+    UiPlaygroundComponentConfig(ExternalButton),
+    UiPlaygroundComponentConfig(ExternalCard),
+  ],
+)
+class AppComponents {
+  static List<UiPlaygroundItem> get items => GeneratedUiPlaygroundComponents.items;
+}
 ```
 
 ## Generated Code

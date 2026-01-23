@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return UiPlayground(
+    return UiPlaygroundApp(
       title: 'My Component Library',
       sections: [
         UiPlaygroundSection(

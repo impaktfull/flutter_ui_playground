@@ -37,25 +37,25 @@ A Flutter UI component playground system with code generation support. This mono
 
 ```yaml
 dependencies:
-  ui_playground: 
-    path: ../ui_playground
-  ui_playground_annotations:
-    path: ../ui_playground_annotations
+  ui_playground: ^0.0.1
+  ui_playground_annotations: ^0.0.1
 
 dev_dependencies:
   build_runner: ^2.4.9
-  ui_playground_generator:
-    path: ../ui_playground_generator
+  ui_playground_generator: ^0.0.1
 ```
 
-2. Create a simple trigger file:
+2. Create an aggregation class:
 
 ```dart
-// lib/ui_playground_items.dart
-@UiPlaygroundComponents()
-library;
-
+// lib/ui_playground/components.dart
 import 'package:ui_playground/ui_playground.dart';
+import 'package:my_app/ui_playground/components.ui_playground.dart';
+
+@UiPlaygroundComponents()
+class AppComponents {
+  static List<UiPlaygroundItem> get items => GeneratedUiPlaygroundComponents.items;
+}
 ```
 
 3. Annotate your widgets:
@@ -82,25 +82,41 @@ class MyButton extends StatelessWidget {
 dart run build_runner build
 ```
 
-5. Import and use the generated file:
+5. Use in your app:
 
 ```dart
-import 'ui_playground_items.ui_playground.dart';
+import 'ui_playground/components.dart';
 
 UiPlaygroundApp(
   title: 'My App Playground',
   sections: [
     UiPlaygroundSection(
       title: 'Buttons',
-      items: [
-        MyButtonPlaygroundItem(),  // Generated automatically
-      ],
+      items: AppComponents.items,
     ),
   ],
 )
 ```
 
-The generator automatically finds all `@UiPlaygroundComponent` widgets, generates all imports, and creates a complete standalone file.
+## External Components
+
+For widgets from external packages you cannot annotate:
+
+```dart
+import 'package:external_ui/external_ui.dart';
+
+@UiPlaygroundComponents(
+  components: [
+    UiPlaygroundComponentConfig(ExternalButton, title: 'Button'),
+    UiPlaygroundComponentConfig(ExternalCard, excludeParams: ['onTap']),
+  ],
+)
+class AppComponents {
+  static List<UiPlaygroundItem> get items => GeneratedUiPlaygroundComponents.items;
+}
+```
+
+Use `componentsOnly: true` to skip scanning for `@UiPlaygroundComponent` annotations.
 
 ## Development
 

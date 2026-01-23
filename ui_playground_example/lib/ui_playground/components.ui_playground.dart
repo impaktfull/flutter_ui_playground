@@ -5,8 +5,10 @@
 // UiPlaygroundAggregatingGenerator
 // **************************************************************************
 
+// ignore_for_file: implementation_imports
 import 'package:flutter/material.dart';
 import 'package:ui_playground/ui_playground.dart';
+import 'package:impaktfull_ui/src/components/divider/divider.dart';
 import 'package:ui_playground_example/component/button.dart';
 import 'package:ui_playground_example/component/input_tester.dart';
 
@@ -18,9 +20,49 @@ class GeneratedUiPlaygroundComponents {
   GeneratedUiPlaygroundComponents._();
 
   static List<UiPlaygroundItem> get items => [
+    ImpaktfullUiDividerPlaygroundItem(),
     ButtonPlaygroundItem(),
     InputTesterPlaygroundItem(),
   ];
+}
+
+// **************************************************************************
+// ImpaktfullUiDivider
+// **************************************************************************
+
+class ImpaktfullUiDividerPlaygroundItem extends UiPlaygroundItem {
+  @override
+  String get title => 'ImpaktfullUiDivider';
+
+  @override
+  List<UiPlaygroundVariant> get variants => [
+    ImpaktfullUiDividerPlaygroundVariant(),
+  ];
+}
+
+class ImpaktfullUiDividerPlaygroundVariant
+    extends UiPlaygroundVariant<ImpaktfullUiDividerPlaygroundInputs> {
+  @override
+  String get title => 'Default';
+
+  @override
+  Widget build(
+    BuildContext context,
+    ImpaktfullUiDividerPlaygroundInputs inputs,
+  ) {
+    return ImpaktfullUiDivider(vertical: inputs.vertical.value ?? false);
+  }
+
+  @override
+  ImpaktfullUiDividerPlaygroundInputs inputs() =>
+      ImpaktfullUiDividerPlaygroundInputs();
+}
+
+class ImpaktfullUiDividerPlaygroundInputs extends UiPlaygroundInputs {
+  final vertical = UiPlaygroundBooleanInput('Vertical', initialValue: false);
+
+  @override
+  List<UiPlaygroundInputItem<dynamic>> buildInputItems() => [vertical];
 }
 
 // **************************************************************************

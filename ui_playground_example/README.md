@@ -6,9 +6,10 @@ Example Flutter application demonstrating the UI Playground system with code gen
 
 This app shows how to:
 1. Annotate widgets with `@UiPlaygroundComponent`
-2. Create an aggregation file with `@UiPlaygroundComponents`
-3. Run the code generator to create playground items in a single file
-4. Display components in the `UiPlayground` widget
+2. Create an aggregation class with `@UiPlaygroundComponents`
+3. Add external components with `UiPlaygroundComponentConfig`
+4. Run the code generator to create playground items
+5. Display components in the `UiPlayground` widget
 
 ## Getting Started
 
@@ -41,16 +42,17 @@ flutter run
 ```
 ui_playground_example/
 ├── lib/
-│   ├── main.dart                              # App entry point
-│   ├── ui_playground_items.dart               # Trigger file with @UiPlaygroundComponents
-│   ├── ui_playground_items.ui_playground.dart # Generated file (complete standalone library)
+│   ├── main.dart                                  # App entry point
+│   ├── ui_playground/
+│   │   ├── components.dart                        # Aggregation class with @UiPlaygroundComponents
+│   │   └── components.ui_playground.dart          # Generated file
 │   └── component/
-│       └── button.dart                        # Annotated widget
+│       └── button.dart                            # Annotated widget
 ├── pubspec.yaml
 └── README.md
 ```
 
-## Example: Adding a New Component
+## Example: Adding Your Own Widget
 
 ### 1. Create Your Widget
 
@@ -97,17 +99,55 @@ class MyCard extends StatelessWidget {
 dart run build_runner build
 ```
 
-That's it! The generator automatically:
-- Finds all `@UiPlaygroundComponent` annotated widgets
-- Generates imports for each component
-- Creates all playground items in a single file
+The generator automatically finds all `@UiPlaygroundComponent` annotated widgets.
 
-### 3. Use in Playground
+## Example: Adding External Components
+
+For widgets from external packages you cannot annotate:
+
+```dart
+// lib/ui_playground/components.dart
+import 'package:external_ui/external_ui.dart';
+import 'package:ui_playground/ui_playground.dart';
+import 'package:my_app/ui_playground/components.ui_playground.dart';
+
+@UiPlaygroundComponents(
+  components: [
+    UiPlaygroundComponentConfig(
+      ExternalButton,
+      title: 'External Button',
+      excludeParams: ['onTap'],
+    ),
+  ],
+)
+class AppComponents {
+  static List<UiPlaygroundItem> get items => GeneratedUiPlaygroundComponents.items;
+}
+```
+
+### componentsOnly Mode
+
+To only use external components and skip scanning:
+
+```dart
+@UiPlaygroundComponents(
+  componentsOnly: true,
+  components: [
+    UiPlaygroundComponentConfig(ExternalButton),
+    UiPlaygroundComponentConfig(ExternalCard),
+  ],
+)
+class AppComponents {
+  static List<UiPlaygroundItem> get items => GeneratedUiPlaygroundComponents.items;
+}
+```
+
+## Usage in App
 
 ```dart
 // lib/main.dart
 import 'package:ui_playground/ui_playground.dart';
-import 'ui_playground_items.ui_playground.dart';
+import 'ui_playground/components.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -117,10 +157,7 @@ class MyApp extends StatelessWidget {
       sections: [
         UiPlaygroundSection(
           title: 'Components',
-          items: [
-            ButtonPlaygroundItem(),
-            MyCardPlaygroundItem(),  // Generated automatically
-          ],
+          items: AppComponents.items,
         ),
       ],
     );
@@ -134,13 +171,10 @@ class MyApp extends StatelessWidget {
 dependencies:
   flutter:
     sdk: flutter
-  ui_playground:
-    path: ../ui_playground
-  ui_playground_annotations:
-    path: ../ui_playground_annotations
+  ui_playground: ^0.0.1
+  ui_playground_annotations: ^0.0.1
 
 dev_dependencies:
   build_runner: ^2.4.9
-  ui_playground_generator:
-    path: ../ui_playground_generator
+  ui_playground_generator: ^0.0.1
 ```

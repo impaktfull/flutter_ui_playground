@@ -57,7 +57,7 @@ class _UiPlaygroundDrawerState extends State<UiPlaygroundDrawer> {
   ) {
     final items = section.items;
     final navigationItems = <ImpaktfullUiSidebarNavigationItem>[];
-    for (var item in section.items) {
+    for (final item in section.items) {
       final filteredVariants = item.variants
           .where(
             (variant) => variant.title.toLowerCase().contains(
@@ -66,20 +66,42 @@ class _UiPlaygroundDrawerState extends State<UiPlaygroundDrawer> {
           )
           .toList();
       if (filteredVariants.isEmpty) continue;
+      if (filteredVariants.length == 1) {
+        final variant = filteredVariants.first;
+        navigationItems.add(
+          ImpaktfullUiSidebarNavigationItem(
+            title: item.title,
+            isSelected: widget.selectedItem == item,
+            onTap: () => widget.onVariantSelected(
+              context,
+              section,
+              item,
+              variant,
+            ),
+          ),
+        );
+        continue;
+      }
+      final variantItems = <ImpaktfullUiSidebarNavigationItem>[];
+      for (final variant in filteredVariants) {
+        variantItems.add(
+          ImpaktfullUiSidebarNavigationItem(
+            title: variant.title,
+            isSelected: widget.selectedVariant == variant,
+            onTap: () => widget.onVariantSelected(
+              context,
+              section,
+              item,
+              variant,
+            ),
+          ),
+        );
+      }
       navigationItems.add(
         ImpaktfullUiSidebarNavigationItem(
           title: item.title,
           isSelected: widget.selectedItem == item,
-          items: [
-            for (final variant in filteredVariants) ...[
-              ImpaktfullUiSidebarNavigationItem(
-                title: variant.title,
-                isSelected: widget.selectedVariant == variant,
-                onTap: () =>
-                    widget.onVariantSelected(context, section, item, variant),
-              ),
-            ],
-          ],
+          items: variantItems,
         ),
       );
     }

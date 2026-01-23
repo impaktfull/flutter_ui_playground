@@ -37,23 +37,62 @@ class MyButton extends StatelessWidget {
 
 ### @UiPlaygroundComponents
 
-Marks a library file as the aggregation point for all generated playground items.
+Marks a class as the aggregation point for all generated playground items.
 
 ```dart
-// lib/ui_playground_items.dart
-@UiPlaygroundComponents()
-library;
-
 import 'package:ui_playground/ui_playground.dart';
+import 'package:my_app/ui_playground/components.ui_playground.dart';
+
+@UiPlaygroundComponents()
+class AppComponents {
+  static List<UiPlaygroundItem> get items => GeneratedUiPlaygroundComponents.items;
+}
 ```
 
-That's it! The generator will:
+The generator will:
 1. Scan all files for `@UiPlaygroundComponent` annotations
-2. Generate a complete standalone file `ui_playground_items.ui_playground.dart` with all imports and playground items
+2. Generate a complete standalone file with all imports and playground items
+3. Create `GeneratedUiPlaygroundComponents.items` containing all components
 
-You then import the generated file:
+#### Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `components` | `List<UiPlaygroundComponentConfig>` | `[]` | External components to include (for widgets you can't annotate) |
+| `componentsOnly` | `bool` | `false` | If true, skip scanning for `@UiPlaygroundComponent` and only use `components` list |
+
+### UiPlaygroundComponentConfig
+
+Configuration for external widgets (from packages you cannot modify).
+
 ```dart
-import 'package:my_app/ui_playground_items.ui_playground.dart';
+@UiPlaygroundComponents(
+  components: [
+    UiPlaygroundComponentConfig(
+      ExternalButton,
+      title: 'External Button',      // Optional: Display name
+      excludeParams: ['onTap'],      // Optional: Parameters to exclude
+    ),
+  ],
+)
+class AppComponents { ... }
+```
+
+#### Using componentsOnly
+
+When your playground only uses external components:
+
+```dart
+@UiPlaygroundComponents(
+  componentsOnly: true,  // Skip scanning for @UiPlaygroundComponent
+  components: [
+    UiPlaygroundComponentConfig(ExternalButton),
+    UiPlaygroundComponentConfig(ExternalCard),
+  ],
+)
+class AppComponents {
+  static List<UiPlaygroundItem> get items => GeneratedUiPlaygroundComponents.items;
+}
 ```
 
 ## Usage
