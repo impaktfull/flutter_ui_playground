@@ -12,12 +12,15 @@ dependencies:
     sdk: flutter
   impaktfull_ui: ^0.78.0
   phosphor_flutter: ^2.1.0
-  ui_playground_annotations:
-    path: ../ui_playground_annotations
+  ui_playground_annotations: ^0.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+
+dependency_overrides:
+  ui_playground_annotations:
+    path: ../ui_playground_annotations
 
 flutter:
