@@ -1,7 +1,7 @@
 name: ui_playground_annotations
-description: "Annotations for UI Playground code generation."
+description: "Annotations package for UI Playground code generation with build_runner."
 version: 0.0.1
-homepage:
+homepage: https://github.com/impaktfull/flutter_ui_playground
 
 environment:
   sdk: ^3.10.1
