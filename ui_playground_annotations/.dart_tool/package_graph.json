@@ -7,7 +7,14 @@
       "name": "ui_playground_annotations",
       "version": "0.0.1",
       "dependencies": [],
-      "devDependencies": []
+      "devDependencies": [
+        "lints"
+      ]
+    },
+    {
+      "name": "lints",
+      "version": "6.0.0",
+      "dependencies": []
     }
   ],
   "configVersion": 1
