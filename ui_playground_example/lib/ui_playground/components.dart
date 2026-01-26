@@ -3,7 +3,7 @@ import 'package:ui_playground/ui_playground.dart';
 import 'package:ui_playground_example/ui_playground/components.ui_playground.dart';
 
 @UiPlaygroundComponents(
-  components: [
+  extraComponents: [
     UiPlaygroundComponentConfig(
       ImpaktfullUiDivider,
       excludeParams: ['margin', 'theme'],

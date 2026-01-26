@@ -7,9 +7,7 @@ class InputUtilWritor {
     required String inputType,
     String? options,
   }) {
-    final fallbackValue = getDefaultValue(param);
-    final defaultValue =
-        param.defaultValue ?? (param.isNullable ? 'null' : fallbackValue);
+    final defaultValue = param.defaultValue ?? getDefaultValue(param);
     final label = param.name.toTitleCase();
     final sb = StringBuffer();
     sb.write("  final ${param.name} = $inputType(\n");
@@ -23,10 +21,17 @@ class InputUtilWritor {
   }
 
   static String getDefaultValue(AnalyzedParameter param) {
+    String defaultStringValue() {
+      return "'{${param.name}}'";
+    }
+
     if (param.defaultValue != null) {
       return param.defaultValue!;
     }
     if (param.isNullable) {
+      if (param.inputType == InputType.string) {
+        return defaultStringValue();
+      }
       return 'null';
     }
     if (param.inputType?.isEnum == true) {
@@ -34,7 +39,7 @@ class InputUtilWritor {
     }
     switch (param.inputType) {
       case InputType.string:
-        return "'{${param.name}}'";
+        return defaultStringValue();
       case InputType.boolean:
         return 'false';
       case InputType.int:

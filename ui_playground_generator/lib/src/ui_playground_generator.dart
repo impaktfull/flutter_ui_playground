@@ -36,13 +36,14 @@ class UiPlaygroundAggregatingGenerator
     final itemClassNames = <String>[];
 
     // Check if we should only use explicit components
-    final componentsOnly =
-        annotation.peek('componentsOnly')?.boolValue ?? false;
+    final extraComponentsOnly =
+        annotation.peek('extraComponentsOnly')?.boolValue ?? false;
 
     // 1. Process external components from the annotation
-    final componentsList = annotation.peek('components')?.listValue ?? [];
-    for (final componentValue in componentsList) {
-      final componentReader = ConstantReader(componentValue);
+    final extraComponentsList =
+        annotation.peek('extraComponents')?.listValue ?? [];
+    for (final extraComponentValue in extraComponentsList) {
+      final componentReader = ConstantReader(extraComponentValue);
       final typeValue = componentReader.peek('type')?.typeValue;
       if (typeValue == null) continue;
 
@@ -71,7 +72,7 @@ class UiPlaygroundAggregatingGenerator
     }
 
     // 2. Find all Dart files in lib/ with @UiPlaygroundComponent (unless componentsOnly is true)
-    if (!componentsOnly) {
+    if (!extraComponentsOnly) {
       final dartFiles = Glob('lib/**.dart');
 
       await for (final input in buildStep.findAssets(dartFiles)) {

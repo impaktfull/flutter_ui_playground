@@ -1,5 +1,9 @@
 # UI Playground
 
+[![ui_playground](https://img.shields.io/pub/v/ui_playground.svg?label=ui_playground)](https://pub.dev/packages/ui_playground)
+[![ui_playground_annotations](https://img.shields.io/pub/v/ui_playground_annotations.svg?label=ui_playground_annotations)](https://pub.dev/packages/ui_playground_annotations)
+[![ui_playground_generator](https://img.shields.io/pub/v/ui_playground_generator.svg?label=ui_playground_generator)](https://pub.dev/packages/ui_playground_generator)
+
 A Flutter UI component playground system with code generation support. This monorepo contains multiple packages that work together to create an interactive playground for testing and showcasing UI components.
 
 ## Packages
@@ -48,7 +52,6 @@ dev_dependencies:
 2. Create an aggregation class:
 
 ```dart
-// lib/ui_playground/components.dart
 import 'package:ui_playground/ui_playground.dart';
 import 'package:my_app/ui_playground/components.ui_playground.dart';
 

@@ -2,6 +2,20 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 
+/// Exception thrown when trying to exclude a required parameter.
+class InvalidExcludeParamException implements Exception {
+  final String paramName;
+  final String message;
+
+  InvalidExcludeParamException({
+    required this.paramName,
+    required this.message,
+  });
+
+  @override
+  String toString() => 'InvalidExcludeParamException: $message';
+}
+
 /// Represents the type of input to generate for a parameter.
 class InputType {
   final String name;
@@ -46,10 +60,16 @@ class AnalyzedParameter {
 /// Analyzes constructor parameters and maps them to UiPlayground input types.
 class ParameterAnalyzer {
   /// Analyzes a list of parameters and returns their input mappings.
+  ///
+  /// Throws [InvalidExcludeParamException] if any parameter in [excludeParams]
+  /// is a required parameter (required parameters cannot be excluded).
   static List<AnalyzedParameter> analyze(
     List<FormalParameterElement> parameters, {
     List<String> excludeParams = const [],
   }) {
+    // Validate that no required parameters are being excluded
+    _validateExcludeParams(parameters, excludeParams);
+
     final result = <AnalyzedParameter>[];
 
     for (final param in parameters) {
@@ -70,6 +90,26 @@ class ParameterAnalyzer {
     }
 
     return result;
+  }
+
+  /// Validates that no required parameters are being excluded.
+  static void _validateExcludeParams(
+    List<FormalParameterElement> parameters,
+    List<String> excludeParams,
+  ) {
+    for (final param in parameters) {
+      final paramName = param.name;
+      if (paramName == null || paramName.isEmpty) continue;
+
+      if (excludeParams.contains(paramName) && param.isRequired) {
+        throw InvalidExcludeParamException(
+          paramName: paramName,
+          message:
+              "Cannot exclude required parameter '$paramName'. "
+              'Only optional parameters can be excluded via excludeParams.',
+        );
+      }
+    }
   }
 
   static AnalyzedParameter? _analyzeParameter(FormalParameterElement param) {

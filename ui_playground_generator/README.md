@@ -1,5 +1,7 @@
 # ui_playground_generator
 
+[![pub package](https://img.shields.io/pub/v/ui_playground_generator.svg)](https://pub.dev/packages/ui_playground_generator)
+
 A build_runner code generator that creates UI Playground items from annotated widget classes.
 
 ## Purpose

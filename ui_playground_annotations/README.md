@@ -1,5 +1,7 @@
 # ui_playground_annotations
 
+[![pub package](https://img.shields.io/pub/v/ui_playground_annotations.svg)](https://pub.dev/packages/ui_playground_annotations)
+
 A pure Dart package containing annotations for the UI Playground code generation system.
 
 ## Purpose

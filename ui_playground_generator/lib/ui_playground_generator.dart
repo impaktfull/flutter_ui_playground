@@ -33,4 +33,4 @@ library;
 
 export 'src/ui_playground_generator.dart' show UiPlaygroundAggregatingGenerator;
 export 'src/parameter_analyzer.dart'
-    show ParameterAnalyzer, AnalyzedParameter, InputType;
+    show ParameterAnalyzer, AnalyzedParameter, InputType, InvalidExcludeParamException;

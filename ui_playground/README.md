@@ -1,5 +1,7 @@
 # ui_playground
 
+[![pub package](https://img.shields.io/pub/v/ui_playground.svg)](https://pub.dev/packages/ui_playground)
+
 A Flutter package that provides an interactive playground for testing and showcasing UI components. It allows you to explore different widget variants and modify their properties in real-time.
 
 ## Features
