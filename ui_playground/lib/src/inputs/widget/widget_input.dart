@@ -4,10 +4,26 @@ import 'package:ui_playground/src/model/item/playground_inputs.dart';
 
 class UiPlaygroundWidgetInput extends UiPlaygroundInputItem<Widget> {
   final List<Widget>? options;
-  var _index = 0;
+  int? _index;
+
+  int? get _selectedIndex {
+    final selectedIndex = _index;
+    if (selectedIndex == null) {
+      return null;
+    }
+    final initialValue = this.initialValue;
+    if (initialValue == null) {
+      return null;
+    }
+    return options?.indexOf(initialValue);
+  }
 
   @override
-  Widget? get defaultValue => options?.elementAtOrNull(_index);
+  Widget? get defaultValue {
+    final index = _selectedIndex;
+    if (index == null) return null;
+    return options?.elementAtOrNull(index);
+  }
 
   UiPlaygroundWidgetInput(
     super.label, {

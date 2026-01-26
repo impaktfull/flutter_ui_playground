@@ -26,6 +26,8 @@ abstract class UiPlaygroundInputs {
 }
 
 abstract class UiPlaygroundInputItem<T> {
+  @protected
+  final T? initialValue;
   T? _value;
   T? get value => _value;
 
@@ -44,7 +46,7 @@ abstract class UiPlaygroundInputItem<T> {
 
   UiPlaygroundInputItem(
     this.label, {
-    T? initialValue,
+    this.initialValue,
     this.extraInfo,
   }) : _value = initialValue;
 

@@ -17,7 +17,7 @@ typedef InputItemBuilder<T> = UiPlaygroundInputItem<T> Function(String label);
 class UiPlaygroundListInput<T> extends UiPlaygroundInputItem<List<T>> {
   final InputItemBuilder<T> inputBuilder;
   final List<UiPlaygroundInputItem<T>> _childInputs = [];
-  int _counter = 0;
+  int _amountOfItems = 0;
 
   @override
   List<T>? get defaultValue => const [];
@@ -37,13 +37,14 @@ class UiPlaygroundListInput<T> extends UiPlaygroundInputItem<List<T>> {
   }
 
   void _addItem({T? itemValue}) {
-    _counter++;
-    final input = inputBuilder('Item $_counter');
+    _amountOfItems++;
+    final input = inputBuilder('Item $_amountOfItems');
     if (itemValue != null) {
       input.updateState(itemValue);
     }
     input.addListener(_onChildChanged);
     _childInputs.add(input);
+    _onChildChanged();
   }
 
   void _removeItem(int index) {
@@ -55,10 +56,9 @@ class UiPlaygroundListInput<T> extends UiPlaygroundInputItem<List<T>> {
   }
 
   void _onChildChanged() {
-    // Aggregate all child values into a list
     final values = <T>[];
     for (final input in _childInputs) {
-      final value = input.value;
+      final value = input.valueOrDefault;
       if (value != null) {
         values.add(value);
       }
@@ -95,9 +95,7 @@ class UiPlaygroundListInput<T> extends UiPlaygroundInputItem<List<T>> {
                 type: ImpaktfullUiButtonType.secondaryGrey,
                 title: 'Add item',
                 fullWidth: true,
-                onAsyncTap: () async {
-                  setState(() => _addItem());
-                },
+                onTap: _addItem,
               ),
             ],
           ),
@@ -114,7 +112,7 @@ class UiPlaygroundListInput<T> extends UiPlaygroundInputItem<List<T>> {
       input.removeListener(_onChildChanged);
     }
     _childInputs.clear();
-    _counter = 0;
+    _amountOfItems = 0;
 
     // Add new items
     if (value == null) return;

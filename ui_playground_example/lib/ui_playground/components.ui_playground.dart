@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:ui_playground/ui_playground.dart';
 import 'package:impaktfull_ui/src/components/button/button.dart';
 import 'package:impaktfull_ui/src/components/divider/divider.dart';
+import 'package:impaktfull_ui/src/components/list_view/list_view.dart';
 import 'package:ui_playground_example/component/button.dart';
 import 'package:ui_playground_example/component/input_tester.dart';
 
@@ -23,6 +24,7 @@ class GeneratedUiPlaygroundComponents {
   static List<UiPlaygroundItem> get items => [
     ImpaktfullUiDividerPlaygroundItem(),
     ImpaktfullUiButtonPlaygroundItem(),
+    ImpaktfullUiListViewPlaygroundItem(),
     ButtonPlaygroundItem(),
     InputTesterPlaygroundItem(),
   ];
@@ -151,6 +153,89 @@ class ImpaktfullUiButtonPlaygroundInputs extends UiPlaygroundInputs {
     isLoading,
     canRequestFocus,
     tooltip,
+  ];
+}
+
+// **************************************************************************
+// ImpaktfullUiListView
+// **************************************************************************
+
+class ImpaktfullUiListViewPlaygroundItem extends UiPlaygroundItem {
+  @override
+  String get title => 'ImpaktfullUiListView';
+
+  @override
+  List<UiPlaygroundVariant> get variants => [
+    ImpaktfullUiListViewPlaygroundVariant(),
+  ];
+}
+
+class ImpaktfullUiListViewPlaygroundVariant
+    extends UiPlaygroundVariant<ImpaktfullUiListViewPlaygroundInputs> {
+  @override
+  String get title => 'Default';
+
+  @override
+  Widget build(
+    BuildContext context,
+    ImpaktfullUiListViewPlaygroundInputs inputs,
+  ) {
+    return ImpaktfullUiListView(
+      isLoading: inputs.isLoading.valueOrDefaultRequired,
+      useSafeArea: inputs.useSafeArea.valueOrDefaultRequired,
+      spacing: inputs.spacing.valueOrDefaultRequired,
+      itemsPerRow: inputs.itemsPerRow.valueOrDefaultRequired,
+      padding: inputs.padding.valueOrDefaultRequired,
+      shrinkWrap: inputs.shrinkWrap.valueOrDefaultRequired,
+      reversed: inputs.reversed.valueOrDefaultRequired,
+      scrollDirection: inputs.scrollDirection.valueOrDefaultRequired,
+      children: inputs.children.valueOrDefaultRequired,
+    );
+  }
+
+  @override
+  ImpaktfullUiListViewPlaygroundInputs inputs() =>
+      ImpaktfullUiListViewPlaygroundInputs();
+}
+
+class ImpaktfullUiListViewPlaygroundInputs extends UiPlaygroundInputs {
+  final children = UiPlaygroundListInput<Widget>(
+    'Children',
+    inputBuilder: (label) => UiPlaygroundWidgetInput(label),
+  );
+  final isLoading = UiPlaygroundBooleanInput('Is Loading', initialValue: false);
+  final useSafeArea = UiPlaygroundBooleanInput(
+    'Use Safe Area',
+    initialValue: true,
+  );
+  final spacing = UiPlaygroundDoubleInput('Spacing', initialValue: 0);
+  final itemsPerRow = UiPlaygroundIntInput('Items Per Row', initialValue: 1);
+  final padding = UiPlaygroundEdgeInsetsGeometryInput(
+    'Padding',
+    initialValue: EdgeInsetsDirectional.zero,
+  );
+  final shrinkWrap = UiPlaygroundBooleanInput(
+    'Shrink Wrap',
+    initialValue: false,
+  );
+  final reversed = UiPlaygroundBooleanInput('Reversed', initialValue: false);
+  final scrollDirection = UiPlaygroundEnumInput<Axis>(
+    'Scroll Direction',
+    initialValue: Axis.vertical,
+    options: Axis.values,
+  );
+
+  @override
+  List<UiPlaygroundInputItem<dynamic>> buildInputItems() => [
+    children,
+    isLoading,
+    useSafeArea,
+    spacing,
+    itemsPerRow,
+    padding,
+    shrinkWrap,
+    reversed,
+    scrollDirection,
   ];
 }
 

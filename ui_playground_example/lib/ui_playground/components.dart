@@ -11,6 +11,15 @@ import 'package:ui_playground_example/ui_playground/components.ui_playground.dar
     UiPlaygroundComponentConfig(
       ImpaktfullUiButton,
     ),
+    UiPlaygroundComponentConfig(
+      ImpaktfullUiListView,
+      excludeParams: [
+        'scrollPhysics',
+        'controller',
+        'localizations',
+        'placeholderData',
+      ],
+    ),
   ],
   customInputs: [
     VoidCallbackInput,
