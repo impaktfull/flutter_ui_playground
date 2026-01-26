@@ -63,9 +63,16 @@ abstract class UiPlaygroundInputItem<T> {
     }
   }
 
-  void _addListener(VoidCallback listener) {
+  /// Adds a listener that will be called when the value changes.
+  /// This is primarily used internally by [UiPlaygroundInputs].
+  void addListener(VoidCallback listener) {
     _listeners.add(listener);
   }
 
-  void _removeListener(VoidCallback listener) => _listeners.remove(listener);
+  /// Removes a previously added listener.
+  void removeListener(VoidCallback listener) => _listeners.remove(listener);
+
+  // Keep private aliases for backwards compatibility with UiPlaygroundInputs
+  void _addListener(VoidCallback listener) => addListener(listener);
+  void _removeListener(VoidCallback listener) => removeListener(listener);
 }

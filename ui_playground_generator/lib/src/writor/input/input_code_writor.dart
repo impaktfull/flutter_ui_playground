@@ -3,6 +3,33 @@ import 'package:ui_playground_generator/src/writor/input/input_field_writor.dart
 import 'package:ui_playground_generator/src/writor/input/input_util_writor.dart';
 
 class InputCodeWritor {
+  /// Parameters that should always come last in the generated code.
+  /// `child` comes before `children` (both at the end).
+  static const _lastParams = ['child', 'children'];
+
+  /// Sorts parameters so that `child` and `children` come last.
+  static List<AnalyzedParameter> _sortParameters(
+    List<AnalyzedParameter> parameters,
+  ) {
+    final sorted = List<AnalyzedParameter>.from(parameters);
+    sorted.sort((a, b) {
+      final aIndex = _lastParams.indexOf(a.name);
+      final bIndex = _lastParams.indexOf(b.name);
+
+      // Both are special params - sort by their order in _lastParams
+      if (aIndex != -1 && bIndex != -1) {
+        return aIndex.compareTo(bIndex);
+      }
+      // Only a is special - it goes last
+      if (aIndex != -1) return 1;
+      // Only b is special - it goes last
+      if (bIndex != -1) return -1;
+      // Neither is special - maintain original order
+      return 0;
+    });
+    return sorted;
+  }
+
   static String generateCode({
     required String className,
     required String title,
@@ -11,6 +38,9 @@ class InputCodeWritor {
     final itemClassName = '${className}PlaygroundItem';
     final variantClassName = '${className}PlaygroundVariant';
     final inputsClassName = '${className}PlaygroundInputs';
+
+    // Sort parameters so child/children come last
+    final sortedParameters = _sortParameters(parameters);
 
     final buffer = StringBuffer();
 
@@ -46,7 +76,7 @@ class InputCodeWritor {
       '  Widget build(BuildContext context, $inputsClassName inputs) {',
     );
     buffer.writeln('    return $className(');
-    for (final param in parameters) {
+    for (final param in sortedParameters) {
       final value = InputUtilWritor.getValue(param);
       buffer.writeln('      ${param.name}: $value,');
     }

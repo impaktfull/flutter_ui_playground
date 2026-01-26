@@ -8,6 +8,7 @@
 // ignore_for_file: implementation_imports
 import 'package:flutter/material.dart';
 import 'package:ui_playground/ui_playground.dart';
+import 'package:impaktfull_ui/src/components/button/button.dart';
 import 'package:impaktfull_ui/src/components/divider/divider.dart';
 import 'package:ui_playground_example/component/button.dart';
 import 'package:ui_playground_example/component/input_tester.dart';
@@ -21,6 +22,7 @@ class GeneratedUiPlaygroundComponents {
 
   static List<UiPlaygroundItem> get items => [
     ImpaktfullUiDividerPlaygroundItem(),
+    ImpaktfullUiButtonPlaygroundItem(),
     ButtonPlaygroundItem(),
     InputTesterPlaygroundItem(),
   ];
@@ -51,6 +53,7 @@ class ImpaktfullUiDividerPlaygroundVariant
     ImpaktfullUiDividerPlaygroundInputs inputs,
   ) {
     return ImpaktfullUiDivider(
+      margin: inputs.margin.valueOrDefault,
       vertical: inputs.vertical.valueOrDefaultRequired,
     );
   }
@@ -61,10 +64,94 @@ class ImpaktfullUiDividerPlaygroundVariant
 }
 
 class ImpaktfullUiDividerPlaygroundInputs extends UiPlaygroundInputs {
+  final margin = UiPlaygroundEdgeInsetsGeometryInput('Margin');
   final vertical = UiPlaygroundBooleanInput('Vertical', initialValue: false);
 
   @override
-  List<UiPlaygroundInputItem<dynamic>> buildInputItems() => [vertical];
+  List<UiPlaygroundInputItem<dynamic>> buildInputItems() => [margin, vertical];
+}
+
+// **************************************************************************
+// ImpaktfullUiButton
+// **************************************************************************
+
+class ImpaktfullUiButtonPlaygroundItem extends UiPlaygroundItem {
+  @override
+  String get title => 'ImpaktfullUiButton';
+
+  @override
+  List<UiPlaygroundVariant> get variants => [
+    ImpaktfullUiButtonPlaygroundVariant(),
+  ];
+}
+
+class ImpaktfullUiButtonPlaygroundVariant
+    extends UiPlaygroundVariant<ImpaktfullUiButtonPlaygroundInputs> {
+  @override
+  String get title => 'Default';
+
+  @override
+  Widget build(
+    BuildContext context,
+    ImpaktfullUiButtonPlaygroundInputs inputs,
+  ) {
+    return ImpaktfullUiButton(
+      type: inputs.type.valueOrDefaultRequired,
+      title: inputs.title.valueOrDefault,
+      size: inputs.size.valueOrDefaultRequired,
+      leadingAsset: inputs.leadingAsset.valueOrDefault,
+      leadingChild: inputs.leadingChild.valueOrDefault,
+      trailingAsset: inputs.trailingAsset.valueOrDefault,
+      trailingChild: inputs.trailingChild.valueOrDefault,
+      fullWidth: inputs.fullWidth.valueOrDefaultRequired,
+      isLoading: inputs.isLoading.valueOrDefaultRequired,
+      canRequestFocus: inputs.canRequestFocus.valueOrDefaultRequired,
+      tooltip: inputs.tooltip.valueOrDefault,
+    );
+  }
+
+  @override
+  ImpaktfullUiButtonPlaygroundInputs inputs() =>
+      ImpaktfullUiButtonPlaygroundInputs();
+}
+
+class ImpaktfullUiButtonPlaygroundInputs extends UiPlaygroundInputs {
+  final type = UiPlaygroundEnumInput<ImpaktfullUiButtonType>(
+    'Type',
+    options: ImpaktfullUiButtonType.values,
+  );
+  final title = UiPlaygroundStringInput('Title');
+  final size = UiPlaygroundEnumInput<ImpaktfullUiButtonSize>(
+    'Size',
+    initialValue: ImpaktfullUiButtonSize.medium,
+    options: ImpaktfullUiButtonSize.values,
+  );
+  final leadingAsset = UiPlaygroundImpaktfullUiAssetInput('Leading Asset');
+  final leadingChild = UiPlaygroundWidgetInput('Leading Child');
+  final trailingAsset = UiPlaygroundImpaktfullUiAssetInput('Trailing Asset');
+  final trailingChild = UiPlaygroundWidgetInput('Trailing Child');
+  final fullWidth = UiPlaygroundBooleanInput('Full Width', initialValue: false);
+  final isLoading = UiPlaygroundBooleanInput('Is Loading', initialValue: false);
+  final canRequestFocus = UiPlaygroundBooleanInput(
+    'Can Request Focus',
+    initialValue: true,
+  );
+  final tooltip = UiPlaygroundStringInput('Tooltip');
+
+  @override
+  List<UiPlaygroundInputItem<dynamic>> buildInputItems() => [
+    type,
+    title,
+    size,
+    leadingAsset,
+    leadingChild,
+    trailingAsset,
+    trailingChild,
+    fullWidth,
+    isLoading,
+    canRequestFocus,
+    tooltip,
+  ];
 }
 
 // **************************************************************************
@@ -129,6 +216,7 @@ class InputTesterPlaygroundVariant
       dateTime: inputs.dateTime.valueOrDefaultRequired,
       edgeInsets: inputs.edgeInsets.valueOrDefaultRequired,
       edgeInsetsGeometry: inputs.edgeInsetsGeometry.valueOrDefaultRequired,
+      tags: inputs.tags.valueOrDefaultRequired,
     );
   }
 
@@ -147,9 +235,14 @@ class InputTesterPlaygroundInputs extends UiPlaygroundInputs {
   final value = UiPlaygroundDoubleInput('Value');
   final color = UiPlaygroundColorInput('Color');
   final dateTime = UiPlaygroundDateTimeInput('Date Time');
-  final edgeInsets = UiPlaygroundEdgeInsetInput('Edge Insets');
-  final edgeInsetsGeometry = UiPlaygroundEdgeInsetGeometryInput(
+  final edgeInsets = UiPlaygroundEdgeInsetsInput('Edge Insets');
+  final edgeInsetsGeometry = UiPlaygroundEdgeInsetsGeometryInput(
     'Edge Insets Geometry',
+  );
+  final tags = UiPlaygroundListInput<String>(
+    'Tags',
+    inputBuilder: (label) => UiPlaygroundStringInput(label),
+    initialValue: const [],
   );
 
   @override
@@ -163,5 +256,6 @@ class InputTesterPlaygroundInputs extends UiPlaygroundInputs {
     dateTime,
     edgeInsets,
     edgeInsetsGeometry,
+    tags,
   ];
 }

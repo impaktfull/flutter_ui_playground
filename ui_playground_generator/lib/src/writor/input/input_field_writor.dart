@@ -10,8 +10,10 @@ class InputFieldWritor {
     InputType.double: 'UiPlaygroundDoubleInput',
     InputType.color: 'UiPlaygroundColorInput',
     InputType.dateTime: 'UiPlaygroundDateTimeInput',
-    InputType.edgeInsets: 'UiPlaygroundEdgeInsetInput',
-    InputType.edgeInsetsGeometry: 'UiPlaygroundEdgeInsetGeometryInput',
+    InputType.edgeInsets: 'UiPlaygroundEdgeInsetsInput',
+    InputType.edgeInsetsGeometry: 'UiPlaygroundEdgeInsetsGeometryInput',
+    InputType.impaktfullUiAsset: 'UiPlaygroundImpaktfullUiAssetInput',
+    InputType.widget: 'UiPlaygroundWidgetInput',
   };
 
   static String generateInputField(AnalyzedParameter param) {
@@ -25,6 +27,11 @@ class InputFieldWritor {
     final inputType = param.inputType;
     if (inputType == null) {
       return '  // Unsupported input type: ${param.typeName}';
+    }
+
+    // Handle list types
+    if (inputType.isList) {
+      return _generateListInput(param, inputType);
     }
 
     if (inputType.isEnum) {
@@ -43,6 +50,48 @@ class InputFieldWritor {
     }
     throw UnimplementedError(
       'Unsupported input type: ${param.inputType?.name}',
+    );
+  }
+
+  static String _generateListInput(
+    AnalyzedParameter param,
+    InputType inputType,
+  ) {
+    final elementTypeName = param.listElementTypeName;
+    if (elementTypeName == null) {
+      return '  // Unsupported list type: ${param.typeName}';
+    }
+
+    final elementType = inputType.listElementType;
+    if (elementType == null) {
+      return '  // Unsupported list element type: $elementTypeName';
+    }
+
+    // Determine the input builder for the element type
+    String inputBuilder;
+    if (param.listElementCustomInput != null) {
+      // Custom input for the element type
+      inputBuilder =
+          '(label) => ${param.listElementCustomInput!.inputClass}(label)';
+    } else if (elementType.isEnum) {
+      // Enum type
+      inputBuilder =
+          '(label) => UiPlaygroundEnumInput<$elementTypeName>(label, options: $elementTypeName.values)';
+    } else {
+      // Standard input type
+      final elementInputClass = _inputTypeToClass.getInputTypeClass(
+        elementType,
+      );
+      if (elementInputClass == null) {
+        return '  // Unsupported list element type: $elementTypeName';
+      }
+      inputBuilder = '(label) => $elementInputClass(label)';
+    }
+
+    return InputUtilWritor.writeListInput(
+      param: param,
+      elementTypeName: elementTypeName,
+      inputBuilder: inputBuilder,
     );
   }
 }

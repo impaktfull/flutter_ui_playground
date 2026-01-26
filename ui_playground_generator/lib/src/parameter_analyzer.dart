@@ -25,15 +25,27 @@ class InputType {
   static const InputType color = InputType(name: 'Color');
   static const InputType dateTime = InputType(name: 'DateTime');
   static const InputType edgeInsets = InputType(name: 'EdgeInsets');
-  static const InputType edgeInsetsGeometry = InputType(name: 'EdgeInsetsGeometry');
+  static const InputType edgeInsetsGeometry = InputType(
+    name: 'EdgeInsetsGeometry',
+  );
+  static const InputType impaktfullUiAsset = InputType(
+    name: 'ImpaktfullUiAsset',
+  );
+  static const InputType widget = InputType(name: 'Widget');
   static const InputType custom = InputType(name: 'Custom');
 
   final String name;
   final bool isEnum;
+  final bool isList;
+
+  /// For list types, this is the inner element type.
+  final InputType? listElementType;
 
   const InputType({
     required this.name,
     this.isEnum = false,
+    this.isList = false,
+    this.listElementType,
   });
 }
 
@@ -64,6 +76,12 @@ class AnalyzedParameter {
   /// Custom input configuration if specified via annotation.
   final CustomInputConfig? customInput;
 
+  /// For list types, the name of the element type (e.g., 'String' for `List<String>`).
+  final String? listElementTypeName;
+
+  /// For list types, custom input for the element type if specified.
+  final CustomInputConfig? listElementCustomInput;
+
   AnalyzedParameter({
     required this.name,
     required this.documentationComment,
@@ -74,6 +92,8 @@ class AnalyzedParameter {
     this.defaultValue,
     this.inputType,
     this.customInput,
+    this.listElementTypeName,
+    this.listElementCustomInput,
   });
 }
 
@@ -110,14 +130,20 @@ class ParameterAnalyzer {
 
       // Determine custom input by type name: per-component takes precedence over global
       final typeName = _getTypeName(param.type);
-      final customInput = customInputs[typeName] ?? globalCustomInputs[typeName];
+      final customInput =
+          customInputs[typeName] ?? globalCustomInputs[typeName];
 
       // Skip function types (callbacks) unless custom input is specified
       if (param.type is FunctionType && customInput == null) {
         continue;
       }
 
-      final analyzed = _analyzeParameter(param, customInput: customInput);
+      final analyzed = _analyzeParameter(
+        param,
+        customInput: customInput,
+        customInputs: customInputs,
+        globalCustomInputs: globalCustomInputs,
+      );
       if (analyzed != null) {
         result.add(analyzed);
       }
@@ -149,6 +175,8 @@ class ParameterAnalyzer {
   static AnalyzedParameter? _analyzeParameter(
     FormalParameterElement param, {
     CustomInputConfig? customInput,
+    Map<String, CustomInputConfig> customInputs = const {},
+    Map<String, CustomInputConfig> globalCustomInputs = const {},
   }) {
     final paramName = param.name;
     if (paramName == null || paramName.isEmpty) {
@@ -165,12 +193,32 @@ class ParameterAnalyzer {
       defaultValue = param.defaultValueCode;
     }
 
+    // Check for list types
+    String? listElementTypeName;
+    CustomInputConfig? listElementCustomInput;
+
+    if (type.isDartCoreList && type is InterfaceType) {
+      final typeArgs = type.typeArguments;
+      if (typeArgs.isNotEmpty) {
+        final elementType = typeArgs.first;
+        listElementTypeName = _getTypeName(elementType);
+        // Check if there's a custom input for the element type
+        listElementCustomInput =
+            customInputs[listElementTypeName] ??
+            globalCustomInputs[listElementTypeName];
+      }
+    }
+
     // If custom input is specified, use it; otherwise map to default input type
     final InputType? inputType;
     if (customInput != null) {
       inputType = InputType.custom;
     } else {
-      inputType = _mapToInputType(type);
+      inputType = _mapToInputType(
+        type,
+        customInputs: customInputs,
+        globalCustomInputs: globalCustomInputs,
+      );
     }
 
     return AnalyzedParameter(
@@ -183,6 +231,8 @@ class ParameterAnalyzer {
       defaultValue: defaultValue,
       dartType: type,
       customInput: customInput,
+      listElementTypeName: listElementTypeName,
+      listElementCustomInput: listElementCustomInput,
     );
   }
 
@@ -195,7 +245,11 @@ class ParameterAnalyzer {
     return type.getDisplayString();
   }
 
-  static InputType? _mapToInputType(DartType type) {
+  static InputType? _mapToInputType(
+    DartType type, {
+    Map<String, CustomInputConfig> customInputs = const {},
+    Map<String, CustomInputConfig> globalCustomInputs = const {},
+  }) {
     final element = type.element;
     final typeName = _getTypeName(type);
 
@@ -219,10 +273,38 @@ class ParameterAnalyzer {
         isEnum: true,
       );
     }
-    if (type.isDartCoreList) {
-      print("WE CURRENTLY DON'T SUPPORT LIST TYPES YES");
+
+    // Handle List<T> types
+    if (type.isDartCoreList && type is InterfaceType) {
+      final typeArgs = type.typeArguments;
+      if (typeArgs.isNotEmpty) {
+        final elementType = typeArgs.first;
+        final elementTypeName = _getTypeName(elementType);
+
+        // Check if there's a custom input for the element type
+        final elementCustomInput =
+            customInputs[elementTypeName] ??
+            globalCustomInputs[elementTypeName];
+
+        InputType? elementInputType;
+        if (elementCustomInput != null) {
+          elementInputType = InputType.custom;
+        } else {
+          // Recursively map the element type (but don't pass custom inputs to avoid infinite recursion)
+          elementInputType = _mapToInputType(elementType);
+        }
+
+        if (elementInputType != null) {
+          return InputType(
+            name: 'List<$elementTypeName>',
+            isList: true,
+            listElementType: elementInputType,
+          );
+        }
+      }
       return null;
     }
+
     return InputType(
       name: typeName,
     );

@@ -7,7 +7,9 @@ import 'package:ui_playground_example/ui_playground/components.ui_playground.dar
   extraComponents: [
     UiPlaygroundComponentConfig(
       ImpaktfullUiDivider,
-      excludeParams: ['margin', 'theme'],
+    ),
+    UiPlaygroundComponentConfig(
+      ImpaktfullUiButton,
     ),
   ],
   customInputs: [
@@ -15,6 +17,5 @@ import 'package:ui_playground_example/ui_playground/components.ui_playground.dar
   ],
 )
 class AppComponents {
-  static List<UiPlaygroundItem> get items =>
-      GeneratedUiPlaygroundComponents.items;
+  static List<UiPlaygroundItem> get items => GeneratedUiPlaygroundComponents.items;
 }

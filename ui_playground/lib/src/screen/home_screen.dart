@@ -32,19 +32,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isSmall = ImpaktfullUiResponsiveLayout.isSmallOrSmaller(context);
+    final drawer = UiPlaygroundDrawer(
+      sections: widget.sections,
+      selectedSection: selectedSection,
+      selectedItem: selectedItem,
+      selectedVariant: selectedVariant,
+      onVariantSelected: _onVariantSelected,
+    );
     return ImpaktfullUiThemeBuidler(
       builder: (context, theme) => ImpaktfullUiAdaptiveScreen(
         title: widget.title,
+        isDrawerEnabled: isSmall,
+        drawer: isSmall ? drawer : null,
         builder: (context) => ImpaktfullUiAutoLayout.horizontal(
           children: [
-            UiPlaygroundDrawer(
-              sections: widget.sections,
-              selectedSection: selectedSection,
-              selectedItem: selectedItem,
-              selectedVariant: selectedVariant,
-              onVariantSelected: _onVariantSelected,
-            ),
-            ImpaktfullUiDivider(vertical: true),
+            if (!isSmall) ...[
+              drawer,
+              ImpaktfullUiDivider(vertical: true),
+            ],
             Expanded(
               child: Builder(
                 builder: (context) {

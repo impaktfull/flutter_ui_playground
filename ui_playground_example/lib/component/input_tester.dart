@@ -21,6 +21,7 @@ class InputTester extends StatelessWidget {
   final InputTesterType inputTesterType;
   final EdgeInsets edgeInsets;
   final EdgeInsetsGeometry edgeInsetsGeometry;
+  final List<String> tags;
 
   const InputTester({
     required this.title,
@@ -32,6 +33,7 @@ class InputTester extends StatelessWidget {
     required this.dateTime,
     required this.edgeInsets,
     required this.edgeInsetsGeometry,
+    this.tags = const [],
     super.key,
   });
 
@@ -82,6 +84,10 @@ class InputTester extends StatelessWidget {
           _InputTesterListItem(
             title: 'EdgeInsetsGeometry',
             value: edgeInsetsGeometry,
+          ),
+          _InputTesterListItem(
+            title: 'Tags',
+            value: tags.join(', '),
           ),
         ],
       ),

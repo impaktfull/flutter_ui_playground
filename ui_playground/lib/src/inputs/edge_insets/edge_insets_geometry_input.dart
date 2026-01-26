@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:impaktfull_ui/impaktfull_ui.dart';
 import 'package:ui_playground/src/model/item/playground_inputs.dart';
 
-class UiPlaygroundEdgeInsetInput extends UiPlaygroundInputItem<EdgeInsets> {
-  final List<EdgeInsets> options;
+class UiPlaygroundEdgeInsetsGeometryInput
+    extends UiPlaygroundInputItem<EdgeInsetsGeometry> {
+  final List<EdgeInsetsGeometry> options;
 
   @override
-  EdgeInsets? get defaultValue => EdgeInsets.zero;
+  EdgeInsetsGeometry? get defaultValue => EdgeInsets.zero;
 
-  UiPlaygroundEdgeInsetInput(
+  UiPlaygroundEdgeInsetsGeometryInput(
     super.label, {
     this.options = const [
       EdgeInsets.all(2),
@@ -27,7 +28,7 @@ class UiPlaygroundEdgeInsetInput extends UiPlaygroundInputItem<EdgeInsets> {
       builder: (context, setState) => ImpaktfullUiSeparatedColumn(
         children: [
           for (final item in options) ...[
-            ImpaktfullUiRadioButtonListItem<EdgeInsets?>(
+            ImpaktfullUiRadioButtonListItem<EdgeInsetsGeometry?>(
               title: item.toString(),
               value: item,
               groupValue: value,
