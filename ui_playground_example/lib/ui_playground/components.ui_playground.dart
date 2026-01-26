@@ -50,7 +50,9 @@ class ImpaktfullUiDividerPlaygroundVariant
     BuildContext context,
     ImpaktfullUiDividerPlaygroundInputs inputs,
   ) {
-    return ImpaktfullUiDivider(vertical: inputs.vertical.value ?? false);
+    return ImpaktfullUiDivider(
+      vertical: inputs.vertical.valueOrDefaultRequired,
+    );
   }
 
   @override
@@ -84,7 +86,7 @@ class ButtonPlaygroundVariant
 
   @override
   Widget build(BuildContext context, ButtonPlaygroundInputs inputs) {
-    return Button(title: inputs.title.value ?? '{title}');
+    return Button(title: inputs.title.valueOrDefaultRequired);
   }
 
   @override
@@ -92,7 +94,7 @@ class ButtonPlaygroundVariant
 }
 
 class ButtonPlaygroundInputs extends UiPlaygroundInputs {
-  final title = UiPlaygroundStringInput('Title', initialValue: '{title}');
+  final title = UiPlaygroundStringInput('Title');
 
   @override
   List<UiPlaygroundInputItem<dynamic>> buildInputItems() => [title];
@@ -118,14 +120,15 @@ class InputTesterPlaygroundVariant
   @override
   Widget build(BuildContext context, InputTesterPlaygroundInputs inputs) {
     return InputTester(
-      title: inputs.title.value ?? '{title}',
-      inputTesterType:
-          inputs.inputTesterType.value ?? InputTesterType.values.first,
-      isEnabled: inputs.isEnabled.value ?? false,
-      count: inputs.count.value ?? 0,
-      value: inputs.value.value ?? 0.0,
-      color: inputs.color.value ?? UiPlaygroundTheme.accentColor,
-      dateTime: inputs.dateTime.value ?? DateTime.now(),
+      title: inputs.title.valueOrDefaultRequired,
+      inputTesterType: inputs.inputTesterType.valueOrDefaultRequired,
+      isEnabled: inputs.isEnabled.valueOrDefaultRequired,
+      count: inputs.count.valueOrDefaultRequired,
+      value: inputs.value.valueOrDefaultRequired,
+      color: inputs.color.valueOrDefaultRequired,
+      dateTime: inputs.dateTime.valueOrDefaultRequired,
+      edgeInsets: inputs.edgeInsets.valueOrDefaultRequired,
+      edgeInsetsGeometry: inputs.edgeInsetsGeometry.valueOrDefaultRequired,
     );
   }
 
@@ -134,22 +137,19 @@ class InputTesterPlaygroundVariant
 }
 
 class InputTesterPlaygroundInputs extends UiPlaygroundInputs {
-  final title = UiPlaygroundStringInput('Title', initialValue: '{title}');
+  final title = UiPlaygroundStringInput('Title');
   final inputTesterType = UiPlaygroundEnumInput<InputTesterType>(
     'Input Tester Type',
-    initialValue: InputTesterType.values.first,
     options: InputTesterType.values,
   );
-  final isEnabled = UiPlaygroundBooleanInput('Is Enabled', initialValue: false);
-  final count = UiPlaygroundIntInput('Count', initialValue: 0);
-  final value = UiPlaygroundDoubleInput('Value', initialValue: 0.0);
-  final color = UiPlaygroundColorInput(
-    'Color',
-    initialValue: UiPlaygroundTheme.accentColor,
-  );
-  final dateTime = UiPlaygroundDateTimeInput(
-    'Date Time',
-    initialValue: DateTime.now(),
+  final isEnabled = UiPlaygroundBooleanInput('Is Enabled');
+  final count = UiPlaygroundIntInput('Count');
+  final value = UiPlaygroundDoubleInput('Value');
+  final color = UiPlaygroundColorInput('Color');
+  final dateTime = UiPlaygroundDateTimeInput('Date Time');
+  final edgeInsets = UiPlaygroundEdgeInsetInput('Edge Insets');
+  final edgeInsetsGeometry = UiPlaygroundEdgeInsetGeometryInput(
+    'Edge Insets Geometry',
   );
 
   @override
@@ -161,5 +161,7 @@ class InputTesterPlaygroundInputs extends UiPlaygroundInputs {
     value,
     color,
     dateTime,
+    edgeInsets,
+    edgeInsetsGeometry,
   ];
 }

@@ -1,52 +1,48 @@
 import 'package:ui_playground_generator/src/parameter_analyzer.dart';
+import 'package:ui_playground_generator/src/util/extensions/input_type_extensions.dart';
 import 'package:ui_playground_generator/src/writor/input/input_util_writor.dart';
 
 class InputFieldWritor {
+  static final Map<InputType, String> _inputTypeToClass = {
+    InputType.string: 'UiPlaygroundStringInput',
+    InputType.boolean: 'UiPlaygroundBooleanInput',
+    InputType.int: 'UiPlaygroundIntInput',
+    InputType.double: 'UiPlaygroundDoubleInput',
+    InputType.color: 'UiPlaygroundColorInput',
+    InputType.dateTime: 'UiPlaygroundDateTimeInput',
+    InputType.edgeInsets: 'UiPlaygroundEdgeInsetInput',
+    InputType.edgeInsetsGeometry: 'UiPlaygroundEdgeInsetGeometryInput',
+  };
+
   static String generateInputField(AnalyzedParameter param) {
-    if (param.inputType?.isEnum == true) {
+    // Handle custom inputs first
+    if (param.customInput != null) {
       return InputUtilWritor.writeInput(
         param: param,
-        inputType: 'UiPlaygroundEnumInput<${param.typeName}>',
+        inputTypeClass: param.customInput!.inputClass,
+      );
+    }
+    final inputType = param.inputType;
+    if (inputType == null) {
+      return '  // Unsupported input type: ${param.typeName}';
+    }
+
+    if (inputType.isEnum) {
+      return InputUtilWritor.writeInput(
+        param: param,
+        inputTypeClass: 'UiPlaygroundEnumInput<${param.typeName}>',
         options: '${param.typeName}.values',
       );
     }
-    switch (param.inputType) {
-      case InputType.string:
-        return InputUtilWritor.writeInput(
-          param: param,
-          inputType: 'UiPlaygroundStringInput',
-        );
-      case InputType.boolean:
-        return InputUtilWritor.writeInput(
-          param: param,
-          inputType: 'UiPlaygroundBooleanInput',
-        );
-      case InputType.int:
-        return InputUtilWritor.writeInput(
-          param: param,
-          inputType: 'UiPlaygroundIntInput',
-        );
-      case InputType.double:
-        return InputUtilWritor.writeInput(
-          param: param,
-          inputType: 'UiPlaygroundDoubleInput',
-        );
-      case InputType.color:
-        return InputUtilWritor.writeInput(
-          param: param,
-          inputType: 'UiPlaygroundColorInput',
-        );
-      case InputType.dateTime:
-        return InputUtilWritor.writeInput(
-          param: param,
-          inputType: 'UiPlaygroundDateTimeInput',
-        );
-      case null:
-        return ' // Unsupported input type: ${param.typeName}';
-      default:
-        throw UnimplementedError(
-          'Unsupported input type: ${param.inputType?.name}',
-        );
+    final inputTypeClass = _inputTypeToClass.getInputTypeClass(inputType);
+    if (inputTypeClass != null) {
+      return InputUtilWritor.writeInput(
+        param: param,
+        inputTypeClass: inputTypeClass,
+      );
     }
+    throw UnimplementedError(
+      'Unsupported input type: ${param.inputType?.name}',
+    );
   }
 }

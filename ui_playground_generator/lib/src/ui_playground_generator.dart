@@ -39,6 +39,12 @@ class UiPlaygroundAggregatingGenerator
     final extraComponentsOnly =
         annotation.peek('extraComponentsOnly')?.boolValue ?? false;
 
+    // Parse global custom inputs (keyed by type name)
+    final globalCustomInputs = _parseCustomInputs(annotation);
+
+    // Add imports for global custom inputs
+    _addImportsForCustomInputs(globalCustomInputs, imports);
+
     // 1. Process external components from the annotation
     final extraComponentsList =
         annotation.peek('extraComponents')?.listValue ?? [];
@@ -58,11 +64,17 @@ class UiPlaygroundAggregatingGenerator
               .map((e) => e.toStringValue()!)
               .toList() ??
           [];
+      final customInputs = _parseCustomInputs(componentReader);
+
+      // Add imports for per-component custom inputs
+      _addImportsForCustomInputs(customInputs, imports);
 
       final code = _generateCodeForClassWithConfig(
         classElement,
         title: title,
         excludeParams: excludeParams,
+        customInputs: customInputs,
+        globalCustomInputs: globalCustomInputs,
       );
       if (code != null) {
         generatedCode.add(code.code);
@@ -98,7 +110,17 @@ class UiPlaygroundAggregatingGenerator
           );
           if (componentAnnotation != null) {
             final reader = ConstantReader(componentAnnotation);
-            final code = _generateCodeForClass(classElement, reader);
+            final componentCustomInputs = _parseCustomInputs(reader);
+
+            // Add imports for per-component custom inputs
+            _addImportsForCustomInputs(componentCustomInputs, imports);
+
+            final code = _generateCodeForClass(
+              classElement,
+              reader,
+              customInputs: componentCustomInputs,
+              globalCustomInputs: globalCustomInputs,
+            );
             if (code != null) {
               generatedCode.add(code.code);
               itemClassNames.add(code.itemClassName);
@@ -159,6 +181,65 @@ class UiPlaygroundAggregatingGenerator
     return null;
   }
 
+  /// Parses the customInputs list from a ConstantReader.
+  ///
+  /// Each item in the list is a Type that extends `UiPlaygroundInputItem<T>`.
+  /// This method extracts the target type `T` from the generic parameter
+  /// and returns a map of typeName -> CustomInputConfig (including import URI).
+  Map<String, CustomInputConfig> _parseCustomInputs(ConstantReader reader) {
+    final customInputsMap = <String, CustomInputConfig>{};
+    final customInputsList = reader.peek('customInputs')?.listValue ?? [];
+
+    for (final inputTypeValue in customInputsList) {
+      final inputType = inputTypeValue.toTypeValue();
+      if (inputType == null) continue;
+
+      final inputClassElement = inputType.element;
+      if (inputClassElement is! ClassElement) continue;
+
+      final inputClassName = inputClassElement.name;
+      if (inputClassName == null) continue;
+
+      // Find the UiPlaygroundInputItem<T> supertype and extract T
+      final targetTypeName = _extractInputItemGenericType(inputClassElement);
+      if (targetTypeName == null) continue;
+
+      // Get the import URI for this custom input class
+      final library = inputClassElement.library;
+      final uri = library.identifier;
+      final importUri = uri.startsWith('package:') ? uri : null;
+
+      customInputsMap[targetTypeName] = CustomInputConfig(
+        inputClass: inputClassName,
+        importUri: importUri,
+      );
+    }
+
+    return customInputsMap;
+  }
+
+  /// Extracts the generic type parameter `T` from `UiPlaygroundInputItem<T>`.
+  ///
+  /// Returns the type name (e.g., 'EdgeInsets') or null if not found.
+  String? _extractInputItemGenericType(ClassElement classElement) {
+    // Check all supertypes (including mixins and interfaces)
+    for (final supertype in classElement.allSupertypes) {
+      final element = supertype.element;
+      if (element.name == 'UiPlaygroundInputItem') {
+        // Get the type arguments
+        final typeArgs = supertype.typeArguments;
+        if (typeArgs.isNotEmpty) {
+          final targetType = typeArgs.first;
+          final targetElement = targetType.element;
+          if (targetElement != null) {
+            return targetElement.name;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
   void _addImportForElement(ClassElement classElement, Set<String> imports) {
     final library = classElement.library;
     final uri = library.identifier;
@@ -167,11 +248,25 @@ class UiPlaygroundAggregatingGenerator
     }
   }
 
+  /// Adds imports for all custom input classes.
+  void _addImportsForCustomInputs(
+    Map<String, CustomInputConfig> customInputs,
+    Set<String> imports,
+  ) {
+    for (final config in customInputs.values) {
+      if (config.importUri != null) {
+        imports.add("import '${config.importUri}';");
+      }
+    }
+  }
+
   /// Generate code for a class with explicit configuration (from @UiPlaygroundComponents)
   _GeneratedCode? _generateCodeForClassWithConfig(
     ClassElement classElement, {
     String? title,
     List<String> excludeParams = const [],
+    Map<String, CustomInputConfig> customInputs = const {},
+    Map<String, CustomInputConfig> globalCustomInputs = const {},
   }) {
     final classNameNullable = classElement.name;
     if (classNameNullable == null || classNameNullable.isEmpty) {
@@ -197,6 +292,8 @@ class UiPlaygroundAggregatingGenerator
     final parameters = ParameterAnalyzer.analyze(
       formalParameters,
       excludeParams: ['key', ...excludeParams],
+      customInputs: customInputs,
+      globalCustomInputs: globalCustomInputs,
     );
 
     final itemClassName = '${className}PlaygroundItem';
@@ -214,8 +311,10 @@ class UiPlaygroundAggregatingGenerator
   /// Generate code for a class with @UiPlaygroundComponent annotation
   _GeneratedCode? _generateCodeForClass(
     ClassElement classElement,
-    ConstantReader annotation,
-  ) {
+    ConstantReader annotation, {
+    Map<String, CustomInputConfig> customInputs = const {},
+    Map<String, CustomInputConfig> globalCustomInputs = const {},
+  }) {
     final classNameNullable = classElement.name;
     if (classNameNullable == null || classNameNullable.isEmpty) {
       return null;
@@ -248,6 +347,8 @@ class UiPlaygroundAggregatingGenerator
     final parameters = ParameterAnalyzer.analyze(
       formalParameters,
       excludeParams: ['key', ...excludeParams],
+      customInputs: customInputs,
+      globalCustomInputs: globalCustomInputs,
     );
 
     final itemClassName = '${className}PlaygroundItem';

@@ -3,6 +3,9 @@ import 'package:impaktfull_ui/impaktfull_ui.dart';
 import 'package:ui_playground/src/model/item/playground_inputs.dart';
 
 class UiPlaygroundDateTimeInput extends UiPlaygroundInputItem<DateTime> {
+  @override
+  DateTime? get defaultValue => DateTime.now();
+
   UiPlaygroundDateTimeInput(
     super.label, {
     super.initialValue,

@@ -17,6 +17,8 @@ export 'src/inputs/boolean/boolean_input.dart';
 export 'src/inputs/color/color_input.dart';
 export 'src/inputs/datetime/datetime_input.dart';
 export 'src/inputs/double/double_input.dart';
+export 'src/inputs/edge_inset/edge_inset_input.dart';
+export 'src/inputs/edge_inset/edge_inset_geometry_input.dart';
 
 /// Theme
 export 'src/theme/theme.dart';

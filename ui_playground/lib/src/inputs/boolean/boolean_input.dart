@@ -5,6 +5,9 @@ import 'package:ui_playground/src/model/item/playground_inputs.dart';
 class UiPlaygroundBooleanInput extends UiPlaygroundInputItem<bool> {
   final bool allowNull;
 
+  @override
+  bool? get defaultValue => false;
+
   UiPlaygroundBooleanInput(
     super.label, {
     super.initialValue,

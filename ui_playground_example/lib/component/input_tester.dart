@@ -19,6 +19,8 @@ class InputTester extends StatelessWidget {
   final Color color;
   final DateTime dateTime;
   final InputTesterType inputTesterType;
+  final EdgeInsets edgeInsets;
+  final EdgeInsetsGeometry edgeInsetsGeometry;
 
   const InputTester({
     required this.title,
@@ -28,6 +30,8 @@ class InputTester extends StatelessWidget {
     required this.value,
     required this.color,
     required this.dateTime,
+    required this.edgeInsets,
+    required this.edgeInsetsGeometry,
     super.key,
   });
 
@@ -70,6 +74,14 @@ class InputTester extends StatelessWidget {
           _InputTesterListItem(
             title: 'Date Time',
             value: dateTime,
+          ),
+          _InputTesterListItem(
+            title: 'EdgeInsets',
+            value: edgeInsets,
+          ),
+          _InputTesterListItem(
+            title: 'EdgeInsetsGeometry',
+            value: edgeInsetsGeometry,
           ),
         ],
       ),

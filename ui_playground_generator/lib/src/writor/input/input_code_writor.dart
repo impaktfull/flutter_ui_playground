@@ -47,14 +47,8 @@ class InputCodeWritor {
     );
     buffer.writeln('    return $className(');
     for (final param in parameters) {
-      final defaultValue = InputUtilWritor.getDefaultValue(param);
-      if (defaultValue == 'null') {
-        buffer.writeln('      ${param.name}: inputs.${param.name}.value,');
-      } else {
-        buffer.writeln(
-          '      ${param.name}: inputs.${param.name}.value ?? $defaultValue,',
-        );
-      }
+      final value = InputUtilWritor.getValue(param);
+      buffer.writeln('      ${param.name}: $value,');
     }
     buffer.writeln('    );');
     buffer.writeln('  }');

@@ -6,6 +6,9 @@ class UiPlaygroundDoubleInput extends UiPlaygroundInputItem<double> {
   final double? min;
   final double? max;
 
+  @override
+  double? get defaultValue => 0.0;
+
   UiPlaygroundDoubleInput(
     super.label, {
     super.initialValue,

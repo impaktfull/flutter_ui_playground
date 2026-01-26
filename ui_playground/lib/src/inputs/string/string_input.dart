@@ -3,6 +3,9 @@ import 'package:impaktfull_ui/impaktfull_ui.dart';
 import 'package:ui_playground/src/model/item/playground_inputs.dart';
 
 class UiPlaygroundStringInput extends UiPlaygroundInputItem<String> {
+  @override
+  String? get defaultValue => '{$label}';
+
   UiPlaygroundStringInput(
     super.label, {
     super.initialValue,

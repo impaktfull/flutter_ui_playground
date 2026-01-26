@@ -4,6 +4,9 @@ import 'package:ui_playground/src/inputs/icon/icons_data.dart';
 import 'package:ui_playground/src/model/item/playground_inputs.dart';
 
 class UiPlaygroundIconInput extends UiPlaygroundInputItem<IconData> {
+  @override
+  IconData? get defaultValue => AllIcons.allFlatIconsAsMap.values.first;
+
   final _controller = ImpaktfullUiDropdownController();
   final items = AllIcons.allFlatIconsAsMap.values
       .map(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ui_playground/src/model/error/input_required_error.dart';
 
 abstract class UiPlaygroundInputs {
   List<UiPlaygroundInputItem<dynamic>>? _inputItems;
@@ -27,6 +28,16 @@ abstract class UiPlaygroundInputs {
 abstract class UiPlaygroundInputItem<T> {
   T? _value;
   T? get value => _value;
+
+  T? get valueOrDefault => value ?? defaultValue;
+  T get valueOrDefaultRequired {
+    final value = valueOrDefault;
+    if (value == null) {
+      throw InputRequiredError<T>(label);
+    }
+    return value;
+  }
+
   final String label;
   final String? extraInfo;
   final _listeners = <VoidCallback>{};
@@ -36,6 +47,8 @@ abstract class UiPlaygroundInputItem<T> {
     T? initialValue,
     this.extraInfo,
   }) : _value = initialValue;
+
+  T? get defaultValue;
 
   Widget build(BuildContext context);
 

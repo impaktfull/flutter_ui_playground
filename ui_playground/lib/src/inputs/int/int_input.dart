@@ -6,6 +6,9 @@ class UiPlaygroundIntInput extends UiPlaygroundInputItem<int> {
   final int? min;
   final int? max;
 
+  @override
+  int get defaultValue => 0;
+
   UiPlaygroundIntInput(
     super.label, {
     super.initialValue,

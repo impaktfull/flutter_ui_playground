@@ -2,15 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:impaktfull_ui/impaktfull_ui.dart';
 import 'package:ui_playground/src/model/item/playground_inputs.dart';
 
-class UiPlaygroundEnumInput<T extends Enum> extends UiPlaygroundInputItem<T> {
-  final List<T> options;
+class UiPlaygroundEdgeInsetInput extends UiPlaygroundInputItem<EdgeInsets> {
+  final List<EdgeInsets> options;
 
   @override
-  T? get defaultValue => options.first;
+  EdgeInsets? get defaultValue => EdgeInsets.zero;
 
-  UiPlaygroundEnumInput(
+  UiPlaygroundEdgeInsetInput(
     super.label, {
-    required this.options,
+    this.options = const [
+      EdgeInsets.all(2),
+      EdgeInsets.all(4),
+      EdgeInsets.all(8),
+      EdgeInsets.all(12),
+      EdgeInsets.all(16),
+    ],
     super.initialValue,
     super.extraInfo,
   });
@@ -21,8 +27,8 @@ class UiPlaygroundEnumInput<T extends Enum> extends UiPlaygroundInputItem<T> {
       builder: (context, setState) => ImpaktfullUiSeparatedColumn(
         children: [
           for (final item in options) ...[
-            ImpaktfullUiRadioButtonListItem<T?>(
-              title: item.name,
+            ImpaktfullUiRadioButtonListItem<EdgeInsets?>(
+              title: item.toString(),
               value: item,
               groupValue: value,
               onChanged: updateState,

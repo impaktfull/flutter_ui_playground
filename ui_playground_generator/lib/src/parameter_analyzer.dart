@@ -18,6 +18,16 @@ class InvalidExcludeParamException implements Exception {
 
 /// Represents the type of input to generate for a parameter.
 class InputType {
+  static const InputType string = InputType(name: 'String');
+  static const InputType boolean = InputType(name: 'Boolean');
+  static const InputType int = InputType(name: 'Int');
+  static const InputType double = InputType(name: 'Double');
+  static const InputType color = InputType(name: 'Color');
+  static const InputType dateTime = InputType(name: 'DateTime');
+  static const InputType edgeInsets = InputType(name: 'EdgeInsets');
+  static const InputType edgeInsetsGeometry = InputType(name: 'EdgeInsetsGeometry');
+  static const InputType custom = InputType(name: 'Custom');
+
   final String name;
   final bool isEnum;
 
@@ -25,13 +35,19 @@ class InputType {
     required this.name,
     this.isEnum = false,
   });
+}
 
-  static const InputType string = InputType(name: 'String');
-  static const InputType boolean = InputType(name: 'Boolean');
-  static const InputType int = InputType(name: 'Int');
-  static const InputType double = InputType(name: 'Double');
-  static const InputType color = InputType(name: 'Color');
-  static const InputType dateTime = InputType(name: 'DateTime');
+/// Configuration for a custom input, parsed from the annotation.
+class CustomInputConfig {
+  final String inputClass;
+
+  /// The library URI for importing this input class.
+  final String? importUri;
+
+  const CustomInputConfig({
+    required this.inputClass,
+    this.importUri,
+  });
 }
 
 /// Represents an analyzed constructor parameter with its input mapping.
@@ -45,6 +61,9 @@ class AnalyzedParameter {
   final String? defaultValue;
   final DartType dartType;
 
+  /// Custom input configuration if specified via annotation.
+  final CustomInputConfig? customInput;
+
   AnalyzedParameter({
     required this.name,
     required this.documentationComment,
@@ -54,6 +73,7 @@ class AnalyzedParameter {
     required this.dartType,
     this.defaultValue,
     this.inputType,
+    this.customInput,
   });
 }
 
@@ -61,11 +81,21 @@ class AnalyzedParameter {
 class ParameterAnalyzer {
   /// Analyzes a list of parameters and returns their input mappings.
   ///
+  /// [customInputs] is a map of type names to custom input configurations
+  /// for this specific component. These take precedence over [globalCustomInputs].
+  ///
+  /// [globalCustomInputs] is a map of type names to custom input configurations
+  /// that apply globally to all components.
+  ///
+  /// Both maps are keyed by **type name** (e.g., 'EdgeInsets', 'Alignment').
+  ///
   /// Throws [InvalidExcludeParamException] if any parameter in [excludeParams]
   /// is a required parameter (required parameters cannot be excluded).
   static List<AnalyzedParameter> analyze(
     List<FormalParameterElement> parameters, {
     List<String> excludeParams = const [],
+    Map<String, CustomInputConfig> customInputs = const {},
+    Map<String, CustomInputConfig> globalCustomInputs = const {},
   }) {
     // Validate that no required parameters are being excluded
     _validateExcludeParams(parameters, excludeParams);
@@ -78,12 +108,16 @@ class ParameterAnalyzer {
         continue;
       }
 
-      // Skip function types (callbacks)
-      if (param.type is FunctionType) {
+      // Determine custom input by type name: per-component takes precedence over global
+      final typeName = _getTypeName(param.type);
+      final customInput = customInputs[typeName] ?? globalCustomInputs[typeName];
+
+      // Skip function types (callbacks) unless custom input is specified
+      if (param.type is FunctionType && customInput == null) {
         continue;
       }
 
-      final analyzed = _analyzeParameter(param);
+      final analyzed = _analyzeParameter(param, customInput: customInput);
       if (analyzed != null) {
         result.add(analyzed);
       }
@@ -112,7 +146,10 @@ class ParameterAnalyzer {
     }
   }
 
-  static AnalyzedParameter? _analyzeParameter(FormalParameterElement param) {
+  static AnalyzedParameter? _analyzeParameter(
+    FormalParameterElement param, {
+    CustomInputConfig? customInput,
+  }) {
     final paramName = param.name;
     if (paramName == null || paramName.isEmpty) {
       return null;
@@ -128,7 +165,13 @@ class ParameterAnalyzer {
       defaultValue = param.defaultValueCode;
     }
 
-    final inputType = _mapToInputType(type);
+    // If custom input is specified, use it; otherwise map to default input type
+    final InputType? inputType;
+    if (customInput != null) {
+      inputType = InputType.custom;
+    } else {
+      inputType = _mapToInputType(type);
+    }
 
     return AnalyzedParameter(
       name: paramName,
@@ -139,6 +182,7 @@ class ParameterAnalyzer {
       isRequired: param.isRequired,
       defaultValue: defaultValue,
       dartType: type,
+      customInput: customInput,
     );
   }
 
@@ -169,21 +213,18 @@ class ParameterAnalyzer {
       return InputType.double;
     }
 
-    // Check for Color (from dart:ui or Flutter)
-    if (typeName == 'Color') {
-      return InputType.color;
-    }
-
-    if (typeName == 'DateTime') {
-      return InputType.dateTime;
-    }
-
     if (element is EnumElement) {
       return InputType(
         name: typeName,
         isEnum: true,
       );
     }
-    return null;
+    if (type.isDartCoreList) {
+      print("WE CURRENTLY DON'T SUPPORT LIST TYPES YES");
+      return null;
+    }
+    return InputType(
+      name: typeName,
+    );
   }
 }
