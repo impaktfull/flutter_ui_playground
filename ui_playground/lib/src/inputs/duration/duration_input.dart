@@ -2,20 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:impaktfull_ui/impaktfull_ui.dart';
 import 'package:ui_playground/src/model/item/playground_inputs.dart';
 
-class UiPlaygroundEdgeInsetsInput extends UiPlaygroundInputItem<EdgeInsets> {
-  final List<EdgeInsets> options;
+class UiPlaygroundDurationInput extends UiPlaygroundInputItem<Duration> {
+  final List<Duration> options;
 
   @override
-  EdgeInsets? get defaultValue => EdgeInsets.zero;
+  Duration? get defaultValue => Duration.zero;
 
-  UiPlaygroundEdgeInsetsInput(
+  UiPlaygroundDurationInput(
     super.label, {
     this.options = const [
-      EdgeInsets.all(2),
-      EdgeInsets.all(4),
-      EdgeInsets.all(8),
-      EdgeInsets.all(12),
-      EdgeInsets.all(16),
+      Duration(seconds: 1),
+      Duration(seconds: 2),
+      Duration(seconds: 3),
+      Duration(seconds: 5),
+      Duration(seconds: 10),
+      Duration(seconds: 20),
+      Duration(seconds: 30),
+      Duration(minutes: 1),
+      Duration(minutes: 10),
+      Duration(minutes: 30),
+      Duration(hours: 1),
+      Duration(hours: 1, minutes: 30),
+      Duration(hours: 2),
+      Duration(hours: 24),
     ],
     super.initialValue,
     super.extraInfo,

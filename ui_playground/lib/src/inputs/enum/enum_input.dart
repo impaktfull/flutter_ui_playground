@@ -21,7 +21,7 @@ class UiPlaygroundEnumInput<T extends Enum> extends UiPlaygroundInputItem<T> {
       builder: (context, setState) => ImpaktfullUiSeparatedColumn(
         children: [
           for (final item in options) ...[
-            ImpaktfullUiRadioButtonListItem<T?>(
+            ImpaktfullUiRadioButtonListItem(
               title: item.name,
               value: item,
               groupValue: value,

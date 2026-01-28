@@ -28,7 +28,7 @@ class UiPlaygroundBorderRadiusInput
       builder: (context, setState) => ImpaktfullUiSeparatedColumn(
         children: [
           for (final item in options) ...[
-            ImpaktfullUiRadioButtonListItem<BorderRadius?>(
+            ImpaktfullUiRadioButtonListItem(
               title: item.toString(),
               value: item,
               groupValue: value,

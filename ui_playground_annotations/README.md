@@ -10,8 +10,8 @@ A pure Dart package containing annotations for the UI Playground code generation
 
 This packages is part of an ecosystem of packages that work together to create an ui playground for testing and showcasing UI components.
 
-- `ui_playground_annotations` [![ui_playground_annotations](https://img.shields.io/pub/v/ui_playground_annotations.svg)](https://pub.dev/packages/ui_playground_annotations) - The annotations package for the ui_playground_generator
 - `ui_playground_generator` [![ui_playground_generator](https://img.shields.io/pub/v/ui_playground_generator.svg)](https://pub.dev/packages/ui_playground_generator) - The build_runner code generator that creates playground items from annotations
+- `ui_playground` [![ui_playground](https://img.shields.io/pub/v/ui_playground.svg)](https://pub.dev/packages/ui_playground) - The Flutter UI package that provides the playground UI widget
 
 ## Available Annotations
 

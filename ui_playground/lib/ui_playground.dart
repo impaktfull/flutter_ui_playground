@@ -20,6 +20,9 @@ export 'src/inputs/datetime/datetime_input.dart';
 export 'src/inputs/double/double_input.dart';
 export 'src/inputs/edge_insets/edge_insets_input.dart';
 export 'src/inputs/edge_insets/edge_insets_geometry_input.dart';
+export 'src/inputs/border_radius/border_radius_input.dart';
+export 'src/inputs/border_radius/border_radius_geometry_input.dart';
+export 'src/inputs/duration/duration_input.dart';
 export 'src/inputs/impaktfull_ui/impaktfull_ui_asset_input.dart';
 export 'src/inputs/widget/widget_input.dart';
 

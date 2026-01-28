@@ -29,16 +29,17 @@ class InputType {
   static const InputType edgeInsetsGeometry = InputType(
     name: 'EdgeInsetsGeometry',
   );
-  static const InputType impaktfullUiAsset = InputType(
-    name: 'ImpaktfullUiAsset',
-  );
   static const InputType borderRadiusGeometry = InputType(
     name: 'BorderRadiusGeometry',
   );
   static const InputType borderRadius = InputType(
     name: 'BorderRadius',
   );
+  static const InputType duration = InputType(name: 'Duration');
   static const InputType widget = InputType(name: 'Widget');
+  static const InputType impaktfullUiAsset = InputType(
+    name: 'ImpaktfullUiAsset',
+  );
   static const InputType custom = InputType(name: 'Custom');
 
   final String name;
@@ -137,8 +138,7 @@ class ParameterAnalyzer {
 
       // Determine custom input by type name: per-component takes precedence over global
       final typeName = _getTypeName(param.type);
-      final customInput =
-          customInputs[typeName] ?? globalCustomInputs[typeName];
+      final customInput = customInputs[typeName] ?? globalCustomInputs[typeName];
 
       // Skip function types (callbacks) unless custom input is specified
       if (param.type is FunctionType && customInput == null) {
@@ -218,9 +218,7 @@ class ParameterAnalyzer {
         final elementType = typeArgs.first;
         listElementTypeName = _getTypeName(elementType);
         // Check if there's a custom input for the element type
-        listElementCustomInput =
-            customInputs[listElementTypeName] ??
-            globalCustomInputs[listElementTypeName];
+        listElementCustomInput = customInputs[listElementTypeName] ?? globalCustomInputs[listElementTypeName];
       }
     }
 
@@ -297,9 +295,7 @@ class ParameterAnalyzer {
         final elementTypeName = _getTypeName(elementType);
 
         // Check if there's a custom input for the element type
-        final elementCustomInput =
-            customInputs[elementTypeName] ??
-            globalCustomInputs[elementTypeName];
+        final elementCustomInput = customInputs[elementTypeName] ?? globalCustomInputs[elementTypeName];
 
         InputType? elementInputType;
         if (elementCustomInput != null) {

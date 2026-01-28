@@ -14,6 +14,7 @@ class InputFieldWritor {
     InputType.edgeInsetsGeometry: 'UiPlaygroundEdgeInsetsGeometryInput',
     InputType.borderRadiusGeometry: 'UiPlaygroundBorderRadiusGeometryInput',
     InputType.borderRadius: 'UiPlaygroundBorderRadiusInput',
+    InputType.duration: 'UiPlaygroundDurationInput',
     InputType.impaktfullUiAsset: 'UiPlaygroundImpaktfullUiAssetInput',
     InputType.widget: 'UiPlaygroundWidgetInput',
   };
