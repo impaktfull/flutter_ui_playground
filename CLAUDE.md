@@ -4,12 +4,12 @@ Flutter monorepo for building interactive UI component playgrounds with code gen
 
 ## Project Structure
 
-| Package | Type | Purpose |
-|---------|------|---------|
-| `ui_playground/` | Flutter | Playground UI widget and input components |
-| `ui_playground_annotations/` | Pure Dart | `@UiPlaygroundComponent` and `@UiPlaygroundComponents` annotations |
-| `ui_playground_generator/` | Pure Dart | build_runner code generator |
-| `ui_playground_example/` | Flutter app | Example app demonstrating usage |
+| Package                      | Type        | Purpose                                                            |
+| ---------------------------- | ----------- | ------------------------------------------------------------------ |
+| `ui_playground/`             | Flutter     | Playground UI widget and input components                          |
+| `ui_playground_annotations/` | Pure Dart   | `@UiPlaygroundComponent` and `@UiPlaygroundComponents` annotations |
+| `ui_playground_generator/`   | Pure Dart   | build_runner code generator                                        |
+| `ui_playground_example/`     | Flutter app | Example app demonstrating usage                                    |
 
 **Dependencies flow**: `ui_playground` and `ui_playground_generator` both depend on `ui_playground_annotations`.
 
@@ -50,6 +50,7 @@ For individual packages, use `dart pub get` (pure Dart) or `flutter pub get` (Fl
 ## Testing Changes
 
 After modifying the generator:
+
 1. Run `./tools/build_runner_build.sh` to regenerate example output
 2. Run `./tools/analyze.sh` to check for errors
 3. Inspect the generated file in `ui_playground_example/lib/ui_playground/`
@@ -57,8 +58,31 @@ After modifying the generator:
 ## Documentation
 
 Each package has its own README. Update them when changing:
+
 - Public API (class names, method signatures, annotations)
 - Usage patterns or workflows
 - Supported parameter types
 
 Keep the root `README.md` and package READMEs consistent with each other.
+
+## Changelog Guidelines
+
+This is a **public library** published to pub.dev. Changelogs should only include changes that affect library users:
+
+**Include:**
+
+- New public classes, methods, or properties
+- New annotation parameters
+- New supported parameter types in the generator
+- Breaking changes to public API
+- Deprecated APIs
+
+**Exclude:**
+
+- Internal implementation details
+- Code refactoring that doesn't change public API
+- Formatting or code style fixes
+- Internal error handling improvements
+- File reorganization
+
+Use categories: `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed` (only for user-facing bugs).
