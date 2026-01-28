@@ -1,3 +1,7 @@
+# 0.0.5
+
+- Version bump to keep packages in sync
+
 # 0.0.3 - 0.0.4
 
 ## Changed

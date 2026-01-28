@@ -32,6 +32,12 @@ class InputType {
   static const InputType impaktfullUiAsset = InputType(
     name: 'ImpaktfullUiAsset',
   );
+  static const InputType borderRadiusGeometry = InputType(
+    name: 'BorderRadiusGeometry',
+  );
+  static const InputType borderRadius = InputType(
+    name: 'BorderRadius',
+  );
   static const InputType widget = InputType(name: 'Widget');
   static const InputType custom = InputType(name: 'Custom');
 

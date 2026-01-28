@@ -1,3 +1,9 @@
+# 0.0.5
+
+## Added
+
+- Support for `BorderRadius` and `BorderRadiusGeometry` parameter types
+
 # 0.0.3 - 0.0.4
 
 ## Changed
