@@ -119,20 +119,20 @@ class MyButton extends StatelessWidget {
 }
 ```
 
-See `ui_playground_generator` for more details on code generation.
+See [![ui_playground_generator](https://img.shields.io/pub/v/ui_playground_generator.svg)](https://pub.dev/packages/ui_playground_generator) for more details on code generation.
 
 ## Available Input Types
 
-| Input Type | Class | Dart Type |
-|------------|-------|-----------|
-| String | `UiPlaygroundStringInput` | `String` |
-| Boolean | `UiPlaygroundBooleanInput` | `bool` |
-| Integer | `UiPlaygroundIntInput` | `int` |
-| Double | `UiPlaygroundDoubleInput` | `double` |
-| Enum | `UiPlaygroundEnumInput<T>` | `Enum` |
-| Color | `UiPlaygroundColorInput` | `Color` |
-| DateTime | `UiPlaygroundDateTimeInput` | `DateTime` |
-| Icon | `UiPlaygroundIconInput` | `IconData` |
+| Input Type | Class                       | Dart Type  |
+| ---------- | --------------------------- | ---------- |
+| String     | `UiPlaygroundStringInput`   | `String`   |
+| Boolean    | `UiPlaygroundBooleanInput`  | `bool`     |
+| Integer    | `UiPlaygroundIntInput`      | `int`      |
+| Double     | `UiPlaygroundDoubleInput`   | `double`   |
+| Enum       | `UiPlaygroundEnumInput<T>`  | `Enum`     |
+| Color      | `UiPlaygroundColorInput`    | `Color`    |
+| DateTime   | `UiPlaygroundDateTimeInput` | `DateTime` |
+| Icon       | `UiPlaygroundIconInput`     | `IconData` |
 
 ## Package Structure
 

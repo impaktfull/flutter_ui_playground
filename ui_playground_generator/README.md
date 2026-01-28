@@ -155,14 +155,14 @@ class MyButtonPlaygroundInputs extends UiPlaygroundInputs { ... }
 
 The generator automatically maps Dart types to playground inputs:
 
-| Dart Type | Generated Input |
-|-----------|-----------------|
-| `String` | `UiPlaygroundStringInput` |
-| `bool` | `UiPlaygroundBooleanInput` |
-| `int` | `UiPlaygroundIntInput` |
-| `double` | `UiPlaygroundDoubleInput` |
-| `Enum` | `UiPlaygroundEnumInput<T>` |
-| `Color` | `UiPlaygroundColorInput` |
+| Dart Type  | Generated Input             |
+| ---------- | --------------------------- |
+| `String`   | `UiPlaygroundStringInput`   |
+| `bool`     | `UiPlaygroundBooleanInput`  |
+| `int`      | `UiPlaygroundIntInput`      |
+| `double`   | `UiPlaygroundDoubleInput`   |
+| `Enum`     | `UiPlaygroundEnumInput<T>`  |
+| `Color`    | `UiPlaygroundColorInput`    |
 | `DateTime` | `UiPlaygroundDateTimeInput` |
 
 ### Automatically Excluded Parameters
@@ -195,4 +195,4 @@ ui_playground_generator/
 
 ## Why a Separate Annotations Package?
 
-The generator depends on `ui_playground_annotations` (pure Dart) instead of `ui_playground` (Flutter) because build_runner runs in a pure Dart environment and cannot resolve Flutter dependencies.
+The generator depends on [![ui_playground_annotations](https://img.shields.io/pub/v/ui_playground_annotations.svg)](https://pub.dev/packages/ui_playground_annotations) (pure Dart) instead of [![ui_playground](https://img.shields.io/pub/v/ui_playground.svg)](https://pub.dev/packages/ui_playground) (Flutter) because build_runner runs in a pure Dart environment and cannot resolve Flutter dependencies.

@@ -8,8 +8,8 @@ A pure Dart package containing annotations for the UI Playground code generation
 
 This package is intentionally kept as a **pure Dart package** (no Flutter dependencies) so that it can be used by both:
 
-- `ui_playground` - The Flutter UI package
-- `ui_playground_generator` - The build_runner code generator
+- [![ui_playground](https://img.shields.io/pub/v/ui_playground.svg)](https://pub.dev/packages/ui_playground) - The Flutter UI package
+- [![ui_playground_generator](https://img.shields.io/pub/v/ui_playground_generator.svg)](https://pub.dev/packages/ui_playground_generator) - The build_runner code generator
 
 This separation is necessary because build_runner runs in a pure Dart environment and cannot depend on Flutter packages.
 
