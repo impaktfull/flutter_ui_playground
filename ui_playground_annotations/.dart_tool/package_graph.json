@@ -5,7 +5,7 @@
   "packages": [
     {
       "name": "ui_playground_annotations",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "dependencies": [],
       "devDependencies": [
         "lints"
