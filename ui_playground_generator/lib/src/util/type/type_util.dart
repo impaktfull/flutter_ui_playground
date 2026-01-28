@@ -2,7 +2,10 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 class TypeUtil {
-  static bool extendsImpaktfullUiComponentTheme(DartType type, String className) {
+  static bool extendsImpaktfullUiComponentTheme(
+    DartType type,
+    String className,
+  ) {
     final element = type.element;
     if (element is! InterfaceElement) {
       return false;

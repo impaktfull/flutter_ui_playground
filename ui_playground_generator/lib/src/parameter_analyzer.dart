@@ -131,7 +131,8 @@ class ParameterAnalyzer {
 
       // Determine custom input by type name: per-component takes precedence over global
       final typeName = _getTypeName(param.type);
-      final customInput = customInputs[typeName] ?? globalCustomInputs[typeName];
+      final customInput =
+          customInputs[typeName] ?? globalCustomInputs[typeName];
 
       // Skip function types (callbacks) unless custom input is specified
       if (param.type is FunctionType && customInput == null) {
@@ -139,7 +140,10 @@ class ParameterAnalyzer {
       }
 
       // Skip types that extend ImpaktfullUiComponentTheme (theme override parameters)
-      if (TypeUtil.extendsImpaktfullUiComponentTheme(param.type, 'ImpaktfullUiComponentTheme')) {
+      if (TypeUtil.extendsImpaktfullUiComponentTheme(
+        param.type,
+        'ImpaktfullUiComponentTheme',
+      )) {
         continue;
       }
 
@@ -208,7 +212,9 @@ class ParameterAnalyzer {
         final elementType = typeArgs.first;
         listElementTypeName = _getTypeName(elementType);
         // Check if there's a custom input for the element type
-        listElementCustomInput = customInputs[listElementTypeName] ?? globalCustomInputs[listElementTypeName];
+        listElementCustomInput =
+            customInputs[listElementTypeName] ??
+            globalCustomInputs[listElementTypeName];
       }
     }
 
@@ -285,7 +291,9 @@ class ParameterAnalyzer {
         final elementTypeName = _getTypeName(elementType);
 
         // Check if there's a custom input for the element type
-        final elementCustomInput = customInputs[elementTypeName] ?? globalCustomInputs[elementTypeName];
+        final elementCustomInput =
+            customInputs[elementTypeName] ??
+            globalCustomInputs[elementTypeName];
 
         InputType? elementInputType;
         if (elementCustomInput != null) {
