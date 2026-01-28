@@ -2,11 +2,18 @@
 
 [![pub package](https://img.shields.io/pub/v/ui_playground_generator.svg)](https://pub.dev/packages/ui_playground_generator)
 
-A build_runner code generator that creates UI Playground items from annotated widget classes.
-
 ## Purpose
 
+A build_runner code generator that creates UI Playground items from annotated widget classes.
+
 This package automatically generates `UiPlaygroundItem`, `UiPlaygroundVariant`, and `UiPlaygroundInputs` classes for widgets annotated with `@UiPlaygroundComponent`. All generated code is aggregated into a **single file** marked with `@UiPlaygroundComponents`.
+
+## Other packages
+
+This packages is part of an ecosystem of packages that work together to create an ui playground for testing and showcasing UI components.
+
+- `ui_playground_annotations` [![ui_playground_annotations](https://img.shields.io/pub/v/ui_playground_annotations.svg)](https://pub.dev/packages/ui_playground_annotations) - The annotations package for the ui_playground_generator
+- `ui_playground` [![ui_playground](https://img.shields.io/pub/v/ui_playground.svg)](https://pub.dev/packages/ui_playground) - The Flutter UI package that provides the playground UI widget
 
 ## Installation
 

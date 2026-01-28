@@ -2,6 +2,8 @@
 
 [![pub package](https://img.shields.io/pub/v/ui_playground.svg)](https://pub.dev/packages/ui_playground)
 
+## Purpose
+
 A Flutter package that provides an interactive playground for testing and showcasing UI components. It allows you to explore different widget variants and modify their properties in real-time.
 
 ## Features
@@ -11,6 +13,13 @@ A Flutter package that provides an interactive playground for testing and showca
 - Real-time input controls for widget properties
 - Support for various input types (String, bool, int, double, enum, Color, DateTime)
 - Re-exports annotations from `ui_playground_annotations`
+
+## Other packages
+
+This packages is part of an ecosystem of packages that work together to create an ui playground for testing and showcasing UI components.
+
+- `ui_playground_annotations` [![ui_playground_annotations](https://img.shields.io/pub/v/ui_playground_annotations.svg)](https://pub.dev/packages/ui_playground_annotations) - The annotations package for the ui_playground_generator
+- `ui_playground_generator` [![ui_playground_generator](https://img.shields.io/pub/v/ui_playground_generator.svg)](https://pub.dev/packages/ui_playground_generator) - The build_runner code generator that creates playground items from annotations
 
 ## Installation
 
