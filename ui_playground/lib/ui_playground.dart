@@ -26,8 +26,5 @@ export 'src/inputs/widget/widget_input.dart';
 /// Theme
 export 'src/theme/theme.dart';
 
-/// Theme
-export 'src/theme/theme.dart';
-
 // ui_playground
 export 'src/ui_playground.dart';
