@@ -31,7 +31,16 @@ abstract class UiPlaygroundInputItem<T> {
   T? _value;
   T? get value => _value;
 
-  T? get valueOrDefault => value ?? defaultValue;
+  T? get valueOrDefault {
+    final value = this.value ?? defaultValue;
+    if (value == null && isNullable) {
+      return null;
+    } else if (value == null) {
+      throw InputRequiredError<T>(label);
+    }
+    return value;
+  }
+
   T get valueOrDefaultRequired {
     final value = valueOrDefault;
     if (value == null) {
@@ -40,15 +49,13 @@ abstract class UiPlaygroundInputItem<T> {
     return value;
   }
 
+  final bool isNullable;
+
   final String label;
   final String? extraInfo;
   final _listeners = <VoidCallback>{};
 
-  UiPlaygroundInputItem(
-    this.label, {
-    this.initialValue,
-    this.extraInfo,
-  }) : _value = initialValue;
+  UiPlaygroundInputItem(this.label, {required this.isNullable, this.initialValue, this.extraInfo}) : _value = initialValue;
 
   T? get defaultValue;
 

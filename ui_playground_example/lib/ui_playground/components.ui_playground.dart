@@ -5,7 +5,7 @@
 // UiPlaygroundAggregatingGenerator
 // **************************************************************************
 
-// ignore_for_file: implementation_imports
+// ignore_for_file: implementation_imports, sort_child_properties_last
 import 'package:flutter/material.dart';
 import 'package:ui_playground/ui_playground.dart';
 import 'package:impaktfull_ui/src/components/button/button.dart';
@@ -66,8 +66,15 @@ class ImpaktfullUiDividerPlaygroundVariant
 }
 
 class ImpaktfullUiDividerPlaygroundInputs extends UiPlaygroundInputs {
-  final margin = UiPlaygroundEdgeInsetsGeometryInput('Margin');
-  final vertical = UiPlaygroundBooleanInput('Vertical', initialValue: false);
+  final margin = UiPlaygroundEdgeInsetsGeometryInput(
+    'Margin',
+    isNullable: true,
+  );
+  final vertical = UiPlaygroundBooleanInput(
+    'Vertical',
+    isNullable: false,
+    initialValue: false,
+  );
 
   @override
   List<UiPlaygroundInputItem<dynamic>> buildInputItems() => [margin, vertical];
@@ -108,6 +115,9 @@ class ImpaktfullUiButtonPlaygroundVariant
       fullWidth: inputs.fullWidth.valueOrDefaultRequired,
       isLoading: inputs.isLoading.valueOrDefaultRequired,
       canRequestFocus: inputs.canRequestFocus.valueOrDefaultRequired,
+      onTap: () => UiPlaygroundNotification.show(context, 'onTap()'),
+      onAsyncTap: () async =>
+          UiPlaygroundNotification.show(context, 'onAsyncTap()'),
       tooltip: inputs.tooltip.valueOrDefault,
     );
   }
@@ -120,25 +130,53 @@ class ImpaktfullUiButtonPlaygroundVariant
 class ImpaktfullUiButtonPlaygroundInputs extends UiPlaygroundInputs {
   final type = UiPlaygroundEnumInput<ImpaktfullUiButtonType>(
     'Type',
+    isNullable: false,
     options: ImpaktfullUiButtonType.values,
   );
-  final title = UiPlaygroundStringInput('Title');
+  final title = UiPlaygroundStringInput('Title', isNullable: true);
   final size = UiPlaygroundEnumInput<ImpaktfullUiButtonSize>(
     'Size',
+    isNullable: false,
     initialValue: ImpaktfullUiButtonSize.medium,
     options: ImpaktfullUiButtonSize.values,
   );
-  final leadingAsset = UiPlaygroundImpaktfullUiAssetInput('Leading Asset');
-  final leadingChild = UiPlaygroundWidgetInput('Leading Child');
-  final trailingAsset = UiPlaygroundImpaktfullUiAssetInput('Trailing Asset');
-  final trailingChild = UiPlaygroundWidgetInput('Trailing Child');
-  final fullWidth = UiPlaygroundBooleanInput('Full Width', initialValue: false);
-  final isLoading = UiPlaygroundBooleanInput('Is Loading', initialValue: false);
+  final leadingAsset = UiPlaygroundImpaktfullUiAssetInput(
+    'Leading Asset',
+    isNullable: true,
+  );
+  final leadingChild = UiPlaygroundWidgetInput(
+    'Leading Child',
+    isNullable: true,
+  );
+  final trailingAsset = UiPlaygroundImpaktfullUiAssetInput(
+    'Trailing Asset',
+    isNullable: true,
+  );
+  final trailingChild = UiPlaygroundWidgetInput(
+    'Trailing Child',
+    isNullable: true,
+  );
+  final fullWidth = UiPlaygroundBooleanInput(
+    'Full Width',
+    isNullable: false,
+    initialValue: false,
+  );
+  final isLoading = UiPlaygroundBooleanInput(
+    'Is Loading',
+    isNullable: false,
+    initialValue: false,
+  );
   final canRequestFocus = UiPlaygroundBooleanInput(
     'Can Request Focus',
+    isNullable: false,
     initialValue: true,
   );
-  final tooltip = UiPlaygroundStringInput('Tooltip');
+  final onTap = UiPlaygroundCallbackInput('On Tap', isNullable: true);
+  final onAsyncTap = UiPlaygroundCallbackInput(
+    'On Async Tap',
+    isNullable: true,
+  );
+  final tooltip = UiPlaygroundStringInput('Tooltip', isNullable: true);
 
   @override
   List<UiPlaygroundInputItem<dynamic>> buildInputItems() => [
@@ -152,6 +190,8 @@ class ImpaktfullUiButtonPlaygroundInputs extends UiPlaygroundInputs {
     fullWidth,
     isLoading,
     canRequestFocus,
+    onTap,
+    onAsyncTap,
     tooltip,
   ];
 }
@@ -181,15 +221,19 @@ class ImpaktfullUiListViewPlaygroundVariant
     ImpaktfullUiListViewPlaygroundInputs inputs,
   ) {
     return ImpaktfullUiListView(
+      children: inputs.children.valueOrDefaultRequired,
       isLoading: inputs.isLoading.valueOrDefaultRequired,
       useSafeArea: inputs.useSafeArea.valueOrDefaultRequired,
       spacing: inputs.spacing.valueOrDefaultRequired,
+      onRefresh: () async =>
+          UiPlaygroundNotification.show(context, 'onRefresh()'),
       itemsPerRow: inputs.itemsPerRow.valueOrDefaultRequired,
       padding: inputs.padding.valueOrDefaultRequired,
       shrinkWrap: inputs.shrinkWrap.valueOrDefaultRequired,
       reversed: inputs.reversed.valueOrDefaultRequired,
       scrollDirection: inputs.scrollDirection.valueOrDefaultRequired,
-      children: inputs.children.valueOrDefaultRequired,
+      leadingBuilder: (context) => null,
+      trailingBuilder: (context) => null,
     );
   }
 
@@ -201,28 +245,60 @@ class ImpaktfullUiListViewPlaygroundVariant
 class ImpaktfullUiListViewPlaygroundInputs extends UiPlaygroundInputs {
   final children = UiPlaygroundListInput<Widget>(
     'Children',
-    inputBuilder: (label) => UiPlaygroundWidgetInput(label),
+    isNullable: false,
+    inputBuilder: (label) => UiPlaygroundWidgetInput(label, isNullable: false),
   );
-  final isLoading = UiPlaygroundBooleanInput('Is Loading', initialValue: false);
+  final isLoading = UiPlaygroundBooleanInput(
+    'Is Loading',
+    isNullable: false,
+    initialValue: false,
+  );
   final useSafeArea = UiPlaygroundBooleanInput(
     'Use Safe Area',
+    isNullable: false,
     initialValue: true,
   );
-  final spacing = UiPlaygroundDoubleInput('Spacing', initialValue: 0);
-  final itemsPerRow = UiPlaygroundIntInput('Items Per Row', initialValue: 1);
+  final spacing = UiPlaygroundDoubleInput(
+    'Spacing',
+    isNullable: false,
+    initialValue: 0,
+  );
+  final onRefresh = UiPlaygroundCallbackInput('On Refresh', isNullable: true);
+  final itemsPerRow = UiPlaygroundIntInput(
+    'Items Per Row',
+    isNullable: false,
+    initialValue: 1,
+  );
   final padding = UiPlaygroundEdgeInsetsGeometryInput(
     'Padding',
+    isNullable: false,
     initialValue: EdgeInsetsDirectional.zero,
   );
   final shrinkWrap = UiPlaygroundBooleanInput(
     'Shrink Wrap',
+    isNullable: false,
     initialValue: false,
   );
-  final reversed = UiPlaygroundBooleanInput('Reversed', initialValue: false);
+  final reversed = UiPlaygroundBooleanInput(
+    'Reversed',
+    isNullable: false,
+    initialValue: false,
+  );
   final scrollDirection = UiPlaygroundEnumInput<Axis>(
     'Scroll Direction',
+    isNullable: false,
     initialValue: Axis.vertical,
     options: Axis.values,
+  );
+  final leadingBuilder = UiPlaygroundCallbackInput(
+    'Leading Builder',
+    isNullable: true,
+    parameterNames: ['context'],
+  );
+  final trailingBuilder = UiPlaygroundCallbackInput(
+    'Trailing Builder',
+    isNullable: true,
+    parameterNames: ['context'],
   );
 
   @override
@@ -231,11 +307,14 @@ class ImpaktfullUiListViewPlaygroundInputs extends UiPlaygroundInputs {
     isLoading,
     useSafeArea,
     spacing,
+    onRefresh,
     itemsPerRow,
     padding,
     shrinkWrap,
     reversed,
     scrollDirection,
+    leadingBuilder,
+    trailingBuilder,
   ];
 }
 
@@ -258,7 +337,11 @@ class ButtonPlaygroundVariant
 
   @override
   Widget build(BuildContext context, ButtonPlaygroundInputs inputs) {
-    return Button(title: inputs.title.valueOrDefaultRequired);
+    return Button(
+      title: inputs.title.valueOrDefaultRequired,
+      onTap: () => UiPlaygroundNotification.show(context, 'onTap()'),
+      fullWidth: inputs.fullWidth.valueOrDefaultRequired,
+    );
   }
 
   @override
@@ -266,10 +349,20 @@ class ButtonPlaygroundVariant
 }
 
 class ButtonPlaygroundInputs extends UiPlaygroundInputs {
-  final title = UiPlaygroundStringInput('Title');
+  final title = UiPlaygroundStringInput('Title', isNullable: false);
+  final onTap = UiPlaygroundCallbackInput('On Tap', isNullable: true);
+  final fullWidth = UiPlaygroundBooleanInput(
+    'Full Width',
+    isNullable: false,
+    initialValue: false,
+  );
 
   @override
-  List<UiPlaygroundInputItem<dynamic>> buildInputItems() => [title];
+  List<UiPlaygroundInputItem<dynamic>> buildInputItems() => [
+    title,
+    onTap,
+    fullWidth,
+  ];
 }
 
 // **************************************************************************
@@ -292,6 +385,7 @@ class InputTesterPlaygroundVariant
   @override
   Widget build(BuildContext context, InputTesterPlaygroundInputs inputs) {
     return InputTester(
+      child: inputs.child.valueOrDefaultRequired,
       title: inputs.title.valueOrDefaultRequired,
       inputTesterType: inputs.inputTesterType.valueOrDefaultRequired,
       isEnabled: inputs.isEnabled.valueOrDefaultRequired,
@@ -302,6 +396,17 @@ class InputTesterPlaygroundVariant
       edgeInsets: inputs.edgeInsets.valueOrDefaultRequired,
       edgeInsetsGeometry: inputs.edgeInsetsGeometry.valueOrDefaultRequired,
       tags: inputs.tags.valueOrDefaultRequired,
+      onPressedRequired: () =>
+          UiPlaygroundNotification.show(context, 'onPressedRequired()'),
+      onItemSelectedRequired: (index, name) => UiPlaygroundNotification.show(
+        context,
+        'onItemSelectedRequired(index: $index, name: $name)',
+      ),
+      onPressed: () => UiPlaygroundNotification.show(context, 'onPressed()'),
+      onItemSelected: (index, name) => UiPlaygroundNotification.show(
+        context,
+        'onItemSelected(index: $index, name: $name)',
+      ),
     );
   }
 
@@ -310,28 +415,50 @@ class InputTesterPlaygroundVariant
 }
 
 class InputTesterPlaygroundInputs extends UiPlaygroundInputs {
-  final title = UiPlaygroundStringInput('Title');
+  final child = UiPlaygroundWidgetInput('Child', isNullable: false);
+  final title = UiPlaygroundStringInput('Title', isNullable: false);
   final inputTesterType = UiPlaygroundEnumInput<InputTesterType>(
     'Input Tester Type',
+    isNullable: false,
     options: InputTesterType.values,
   );
-  final isEnabled = UiPlaygroundBooleanInput('Is Enabled');
-  final count = UiPlaygroundIntInput('Count');
-  final value = UiPlaygroundDoubleInput('Value');
-  final color = UiPlaygroundColorInput('Color');
-  final dateTime = UiPlaygroundDateTimeInput('Date Time');
-  final edgeInsets = UiPlaygroundEdgeInsetsInput('Edge Insets');
+  final isEnabled = UiPlaygroundBooleanInput('Is Enabled', isNullable: false);
+  final count = UiPlaygroundIntInput('Count', isNullable: false);
+  final value = UiPlaygroundDoubleInput('Value', isNullable: false);
+  final color = UiPlaygroundColorInput('Color', isNullable: false);
+  final dateTime = UiPlaygroundDateTimeInput('Date Time', isNullable: false);
+  final edgeInsets = UiPlaygroundEdgeInsetsInput(
+    'Edge Insets',
+    isNullable: false,
+  );
   final edgeInsetsGeometry = UiPlaygroundEdgeInsetsGeometryInput(
     'Edge Insets Geometry',
+    isNullable: false,
   );
   final tags = UiPlaygroundListInput<String>(
     'Tags',
-    inputBuilder: (label) => UiPlaygroundStringInput(label),
-    initialValue: const [],
+    isNullable: false,
+    inputBuilder: (label) => UiPlaygroundStringInput(label, isNullable: false),
+  );
+  final onPressedRequired = UiPlaygroundCallbackInput(
+    'On Pressed Required',
+    isNullable: false,
+  );
+  final onItemSelectedRequired = UiPlaygroundCallbackInput(
+    'On Item Selected Required',
+    isNullable: false,
+    parameterNames: ['index', 'name'],
+  );
+  final onPressed = UiPlaygroundCallbackInput('On Pressed', isNullable: true);
+  final onItemSelected = UiPlaygroundCallbackInput(
+    'On Item Selected',
+    isNullable: true,
+    parameterNames: ['index', 'name'],
   );
 
   @override
   List<UiPlaygroundInputItem<dynamic>> buildInputItems() => [
+    child,
     title,
     inputTesterType,
     isEnabled,
@@ -342,5 +469,9 @@ class InputTesterPlaygroundInputs extends UiPlaygroundInputs {
     edgeInsets,
     edgeInsetsGeometry,
     tags,
+    onPressedRequired,
+    onItemSelectedRequired,
+    onPressed,
+    onItemSelected,
   ];
 }

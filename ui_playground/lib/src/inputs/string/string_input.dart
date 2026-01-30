@@ -8,6 +8,7 @@ class UiPlaygroundStringInput extends UiPlaygroundInputItem<String> {
 
   UiPlaygroundStringInput(
     super.label, {
+    required super.isNullable,
     super.initialValue,
     super.extraInfo,
   });

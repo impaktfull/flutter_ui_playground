@@ -24,6 +24,7 @@ class UiPlaygroundListInput<T> extends UiPlaygroundInputItem<List<T>> {
 
   UiPlaygroundListInput(
     super.label, {
+    required super.isNullable,
     required this.inputBuilder,
     List<T>? initialValue,
     super.extraInfo,

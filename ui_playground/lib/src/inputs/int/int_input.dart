@@ -11,6 +11,7 @@ class UiPlaygroundIntInput extends UiPlaygroundInputItem<int> {
 
   UiPlaygroundIntInput(
     super.label, {
+    required super.isNullable,
     super.initialValue,
     super.extraInfo,
     this.min,

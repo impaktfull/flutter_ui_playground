@@ -8,6 +8,7 @@ class UiPlaygroundDateTimeInput extends UiPlaygroundInputItem<DateTime> {
 
   UiPlaygroundDateTimeInput(
     super.label, {
+    required super.isNullable,
     super.initialValue,
     super.extraInfo,
   });

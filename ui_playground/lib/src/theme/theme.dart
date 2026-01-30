@@ -1,5 +1,4 @@
-import 'dart:ui';
-
+import 'package:flutter/material.dart';
 import 'package:impaktfull_ui/impaktfull_ui.dart';
 
 class UiPlaygroundTheme {
@@ -19,6 +18,9 @@ class UiPlaygroundTheme {
   static Color get accentColor => _impaktfullUiTheme!.colors.accent;
 
   static Color get secondaryColor => _impaktfullUiTheme!.colors.secondary;
+
+  static TextStyle get textOnAccentColor => _impaktfullUiTheme!.textStyles.onAccent.text.medium;
+  static TextStyle get textOnSecondaryColor => _impaktfullUiTheme!.textStyles.onSecondary.text.medium;
 
   const UiPlaygroundTheme({
     required Color primaryColor,

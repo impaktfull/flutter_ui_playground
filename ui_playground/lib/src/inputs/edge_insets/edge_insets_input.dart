@@ -10,6 +10,7 @@ class UiPlaygroundEdgeInsetsInput extends UiPlaygroundInputItem<EdgeInsets> {
 
   UiPlaygroundEdgeInsetsInput(
     super.label, {
+    required super.isNullable,
     this.options = const [
       EdgeInsets.all(2),
       EdgeInsets.all(4),

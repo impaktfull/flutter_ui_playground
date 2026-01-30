@@ -8,9 +8,13 @@ import 'package:ui_playground/ui_playground.dart';
 class Button extends StatelessWidget {
   /// The title of the button.
   final String title;
+  final VoidCallback? onTap;
+  final bool fullWidth;
 
   const Button({
     required this.title,
+    required this.onTap,
+    this.fullWidth = false,
     super.key,
   });
 
@@ -18,8 +22,9 @@ class Button extends StatelessWidget {
   Widget build(BuildContext context) {
     return ImpaktfullUiButton(
       title: title,
+      fullWidth: fullWidth,
       type: ImpaktfullUiButtonType.primary,
-      onTap: () {},
+      onTap: onTap,
     );
   }
 }

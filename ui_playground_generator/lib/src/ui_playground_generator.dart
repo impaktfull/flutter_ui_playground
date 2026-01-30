@@ -22,8 +22,7 @@ final _componentChecker = TypeChecker.fromUrl(
 /// annotation for widgets from packages you cannot modify.
 ///
 /// Triggered by @UiPlaygroundComponents annotation on a class.
-class UiPlaygroundAggregatingGenerator
-    extends GeneratorForAnnotation<UiPlaygroundComponents> {
+class UiPlaygroundAggregatingGenerator extends GeneratorForAnnotation<UiPlaygroundComponents> {
   @override
   Future<String> generateForAnnotatedElement(
     Element element,
@@ -36,8 +35,7 @@ class UiPlaygroundAggregatingGenerator
     final itemClassNames = <String>[];
 
     // Check if we should only use explicit components
-    final extraComponentsOnly =
-        annotation.peek('extraComponentsOnly')?.boolValue ?? false;
+    final extraComponentsOnly = annotation.peek('extraComponentsOnly')?.boolValue ?? false;
 
     // Parse global custom inputs (keyed by type name)
     final globalCustomInputs = _parseCustomInputs(annotation);
@@ -46,8 +44,7 @@ class UiPlaygroundAggregatingGenerator
     _addImportsForCustomInputs(globalCustomInputs, imports);
 
     // 1. Process external components from the annotation
-    final extraComponentsList =
-        annotation.peek('extraComponents')?.listValue ?? [];
+    final extraComponentsList = annotation.peek('extraComponents')?.listValue ?? [];
     for (final extraComponentValue in extraComponentsList) {
       final componentReader = ConstantReader(extraComponentValue);
       final typeValue = componentReader.peek('type')?.typeValue;
@@ -58,12 +55,7 @@ class UiPlaygroundAggregatingGenerator
 
       final title = componentReader.peek('title')?.stringValue;
       final excludeParams =
-          componentReader
-              .peek('excludeParams')
-              ?.listValue
-              .map((e) => e.toStringValue()!)
-              .toList() ??
-          [];
+          componentReader.peek('excludeParams')?.listValue.map((e) => e.toStringValue()!).toList() ?? [];
       final customInputs = _parseCustomInputs(componentReader);
 
       // Add imports for per-component custom inputs
@@ -89,8 +81,7 @@ class UiPlaygroundAggregatingGenerator
 
       await for (final input in buildStep.findAssets(dartFiles)) {
         // Skip generated files
-        if (input.path.endsWith('.g.dart') ||
-            input.path.endsWith('.ui_playground.dart')) {
+        if (input.path.endsWith('.g.dart') || input.path.endsWith('.ui_playground.dart')) {
           continue;
         }
 
@@ -135,7 +126,7 @@ class UiPlaygroundAggregatingGenerator
       return '// No components found';
     }
 
-    buffer.writeln("// ignore_for_file: implementation_imports");
+    buffer.writeln("// ignore_for_file: implementation_imports, sort_child_properties_last");
 
     // Write imports - this is a standalone library file
     buffer.writeln("import 'package:flutter/material.dart';");
@@ -279,9 +270,7 @@ class UiPlaygroundAggregatingGenerator
     // Find the constructor (prefer unnamed, then first)
     final constructor =
         classElement.unnamedConstructor ??
-        (classElement.constructors.isNotEmpty
-            ? classElement.constructors.first
-            : null);
+        (classElement.constructors.isNotEmpty ? classElement.constructors.first : null);
 
     if (constructor == null) {
       return null;
@@ -323,20 +312,12 @@ class UiPlaygroundAggregatingGenerator
 
     // Get annotation values
     final title = annotation.peek('title')?.stringValue ?? className;
-    final excludeParams =
-        annotation
-            .peek('excludeParams')
-            ?.listValue
-            .map((e) => e.toStringValue()!)
-            .toList() ??
-        [];
+    final excludeParams = annotation.peek('excludeParams')?.listValue.map((e) => e.toStringValue()!).toList() ?? [];
 
     // Find the constructor (prefer unnamed, then first)
     final constructor =
         classElement.unnamedConstructor ??
-        (classElement.constructors.isNotEmpty
-            ? classElement.constructors.first
-            : null);
+        (classElement.constructors.isNotEmpty ? classElement.constructors.first : null);
 
     if (constructor == null) {
       return null;

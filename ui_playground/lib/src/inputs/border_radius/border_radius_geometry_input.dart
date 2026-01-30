@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:impaktfull_ui/impaktfull_ui.dart';
 import 'package:ui_playground/src/model/item/playground_inputs.dart';
 
-class UiPlaygroundBorderRadiusGeometryInput
-    extends UiPlaygroundInputItem<BorderRadiusGeometry> {
+class UiPlaygroundBorderRadiusGeometryInput extends UiPlaygroundInputItem<BorderRadiusGeometry> {
   final List<BorderRadiusGeometry> options;
 
   @override
@@ -11,6 +10,7 @@ class UiPlaygroundBorderRadiusGeometryInput
 
   UiPlaygroundBorderRadiusGeometryInput(
     super.label, {
+    required super.isNullable,
     this.options = const [
       BorderRadiusGeometry.all(Radius.circular(2)),
       BorderRadiusGeometry.all(Radius.circular(4)),

@@ -40,11 +40,16 @@ class InputType {
   static const InputType impaktfullUiAsset = InputType(
     name: 'ImpaktfullUiAsset',
   );
+  static const InputType callback = InputType(
+    name: 'Callback',
+    isCallback: true,
+  );
   static const InputType custom = InputType(name: 'Custom');
 
   final String name;
   final bool isEnum;
   final bool isList;
+  final bool isCallback;
 
   /// For list types, this is the inner element type.
   final InputType? listElementType;
@@ -53,6 +58,7 @@ class InputType {
     required this.name,
     this.isEnum = false,
     this.isList = false,
+    this.isCallback = false,
     this.listElementType,
   });
 }
@@ -67,6 +73,35 @@ class CustomInputConfig {
   const CustomInputConfig({
     required this.inputClass,
     this.importUri,
+  });
+}
+
+/// Information about a single function parameter.
+class FunctionParameterInfo {
+  final String name;
+  final String typeName;
+
+  const FunctionParameterInfo({
+    required this.name,
+    required this.typeName,
+  });
+}
+
+/// Information about a function/callback type.
+class FunctionTypeInfo {
+  /// The return type of the function (e.g., `void`, `Future<void>`).
+  final String returnTypeName;
+
+  /// The parameters of the function.
+  final List<FunctionParameterInfo> parameters;
+
+  /// The full function type signature (e.g., 'void Function(int, String)').
+  final String fullTypeName;
+
+  const FunctionTypeInfo({
+    required this.returnTypeName,
+    required this.parameters,
+    required this.fullTypeName,
   });
 }
 
@@ -90,6 +125,9 @@ class AnalyzedParameter {
   /// For list types, custom input for the element type if specified.
   final CustomInputConfig? listElementCustomInput;
 
+  /// For function/callback types, information about the function signature.
+  final FunctionTypeInfo? functionTypeInfo;
+
   AnalyzedParameter({
     required this.name,
     required this.documentationComment,
@@ -102,6 +140,7 @@ class AnalyzedParameter {
     this.customInput,
     this.listElementTypeName,
     this.listElementCustomInput,
+    this.functionTypeInfo,
   });
 }
 
@@ -139,11 +178,6 @@ class ParameterAnalyzer {
       // Determine custom input by type name: per-component takes precedence over global
       final typeName = _getTypeName(param.type);
       final customInput = customInputs[typeName] ?? globalCustomInputs[typeName];
-
-      // Skip function types (callbacks) unless custom input is specified
-      if (param.type is FunctionType && customInput == null) {
-        continue;
-      }
 
       // Skip types that extend ImpaktfullUiComponentTheme (theme override parameters)
       if (TypeUtil.extendsImpaktfullUiComponentTheme(
@@ -222,6 +256,12 @@ class ParameterAnalyzer {
       }
     }
 
+    // Check for function types and extract function info
+    FunctionTypeInfo? functionTypeInfo;
+    if (type is FunctionType) {
+      functionTypeInfo = _extractFunctionTypeInfo(type);
+    }
+
     // If custom input is specified, use it; otherwise map to default input type
     final InputType? inputType;
     if (customInput != null) {
@@ -246,6 +286,35 @@ class ParameterAnalyzer {
       customInput: customInput,
       listElementTypeName: listElementTypeName,
       listElementCustomInput: listElementCustomInput,
+      functionTypeInfo: functionTypeInfo,
+    );
+  }
+
+  /// Extracts function type information from a FunctionType.
+  static FunctionTypeInfo _extractFunctionTypeInfo(FunctionType funcType) {
+    final returnTypeName = funcType.returnType.getDisplayString();
+    final parameters = <FunctionParameterInfo>[];
+
+    // Process all formal parameters
+    final formalParams = funcType.formalParameters;
+    for (var i = 0; i < formalParams.length; i++) {
+      final funcParam = formalParams[i];
+      final paramTypeName = funcParam.type.getDisplayString();
+      // Use the parameter name if available, otherwise generate one (arg0, arg1, etc.)
+      final funcParamName = funcParam.name;
+      final paramName = (funcParamName != null && funcParamName.isNotEmpty) ? funcParamName : 'arg$i';
+      parameters.add(
+        FunctionParameterInfo(
+          name: paramName,
+          typeName: paramTypeName,
+        ),
+      );
+    }
+
+    return FunctionTypeInfo(
+      returnTypeName: returnTypeName,
+      parameters: parameters,
+      fullTypeName: funcType.getDisplayString(),
     );
   }
 
@@ -265,6 +334,11 @@ class ParameterAnalyzer {
   }) {
     final element = type.element;
     final typeName = _getTypeName(type);
+
+    // Check for function types (callbacks)
+    if (type is FunctionType) {
+      return InputType.callback;
+    }
 
     // Check for basic types
     if (type.isDartCoreString) {

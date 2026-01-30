@@ -6,8 +6,9 @@ class VoidCallbackInput extends UiPlaygroundInputItem<VoidCallback> {
   VoidCallback? get defaultValue => null;
 
   VoidCallbackInput(
-    super.label,
-  );
+    super.label, {
+    required super.isNullable,
+  });
 
   @override
   Widget build(BuildContext context) => SizedBox();

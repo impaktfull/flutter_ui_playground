@@ -3,8 +3,7 @@ import 'package:impaktfull_ui/impaktfull_ui.dart';
 import 'package:ui_playground/src/inputs/icon/icons_data.dart';
 import 'package:ui_playground/src/model/item/playground_inputs.dart';
 
-class UiPlaygroundImpaktfullUiAssetInput
-    extends UiPlaygroundInputItem<ImpaktfullUiAsset> {
+class UiPlaygroundImpaktfullUiAssetInput extends UiPlaygroundInputItem<ImpaktfullUiAsset> {
   @override
   ImpaktfullUiAsset? get defaultValue => null;
 
@@ -20,6 +19,7 @@ class UiPlaygroundImpaktfullUiAssetInput
 
   UiPlaygroundImpaktfullUiAssetInput(
     super.label, {
+    required super.isNullable,
     super.initialValue,
     super.extraInfo,
   });
@@ -38,19 +38,18 @@ class UiPlaygroundImpaktfullUiAssetInput
             onTap: () => _controller.open(),
           ),
           items: items,
-          itemBuilder: (context, item, index, controller) =>
-              ImpaktfullUiTouchFeedback(
-                onTap: () {
-                  updateState(item.value);
-                  _controller.close();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: ImpaktfullUiAssetWidget(
-                    asset: item.value,
-                  ),
-                ),
+          itemBuilder: (context, item, index, controller) => ImpaktfullUiTouchFeedback(
+            onTap: () {
+              updateState(item.value);
+              _controller.close();
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: ImpaktfullUiAssetWidget(
+                asset: item.value,
               ),
+            ),
+          ),
           noDataLabel: 'No icons',
         ),
       ),

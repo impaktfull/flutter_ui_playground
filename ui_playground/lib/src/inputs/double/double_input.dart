@@ -11,6 +11,7 @@ class UiPlaygroundDoubleInput extends UiPlaygroundInputItem<double> {
 
   UiPlaygroundDoubleInput(
     super.label, {
+    required super.isNullable,
     super.initialValue,
     super.extraInfo,
     this.min,

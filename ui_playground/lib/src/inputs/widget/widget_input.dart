@@ -1,45 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:impaktfull_ui/impaktfull_ui.dart';
-import 'package:ui_playground/src/model/item/playground_inputs.dart';
+import 'package:ui_playground/ui_playground.dart';
 
 class UiPlaygroundWidgetInput extends UiPlaygroundInputItem<Widget> {
-  final List<Widget>? options;
+  late final List<Widget> _fallbackOptions = [
+    Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        color: UiPlaygroundTheme.accentColor,
+      ),
+      padding: const EdgeInsets.all(8),
+      child: Text(
+        'Widget 1',
+        textAlign: TextAlign.center,
+        style: UiPlaygroundTheme.textOnAccentColor,
+      ),
+    ),
+    Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        color: UiPlaygroundTheme.secondaryColor,
+      ),
+      padding: const EdgeInsets.all(8),
+      child: Text(
+        'Widget 2',
+        textAlign: TextAlign.center,
+        style: UiPlaygroundTheme.textOnSecondaryColor,
+      ),
+    ),
+  ];
+  final List<Widget>? _options;
+  List<Widget> get options => _options ?? _fallbackOptions;
   int? _index;
 
   int? get _selectedIndex {
-    final selectedIndex = _index;
-    if (selectedIndex == null) {
+    var selectedIndex = _index;
+    if (isNullable) {
       return null;
     }
+    selectedIndex ??= 0;
     final initialValue = this.initialValue;
-    if (initialValue == null) {
-      return null;
+    if (initialValue != null) {
+      return options.indexOf(initialValue);
     }
-    return options?.indexOf(initialValue);
+    return selectedIndex;
   }
 
   @override
   Widget? get defaultValue {
     final index = _selectedIndex;
     if (index == null) return null;
-    return options?.elementAtOrNull(index);
+    return options.elementAtOrNull(index);
   }
 
   UiPlaygroundWidgetInput(
     super.label, {
-    this.options,
+    required super.isNullable,
+    List<Widget>? options,
     super.initialValue,
     super.extraInfo,
-  });
+  }) : _options = options;
 
   @override
   Widget build(BuildContext context) {
-    final options =
-        this.options ??
-        [
-          Text('Widget 1'),
-          Text('Widget 2'),
-        ];
     return StatefulBuilder(
       builder: (context, setState) => ImpaktfullUiSeparatedColumn(
         children: [

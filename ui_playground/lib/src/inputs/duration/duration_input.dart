@@ -10,6 +10,7 @@ class UiPlaygroundDurationInput extends UiPlaygroundInputItem<Duration> {
 
   UiPlaygroundDurationInput(
     super.label, {
+    required super.isNullable,
     this.options = const [
       Duration(seconds: 1),
       Duration(seconds: 2),

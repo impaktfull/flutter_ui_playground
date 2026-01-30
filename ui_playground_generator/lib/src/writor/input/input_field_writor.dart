@@ -37,6 +37,11 @@ class InputFieldWritor {
       return _generateListInput(param, inputType);
     }
 
+    // Handle callback types
+    if (inputType.isCallback) {
+      return _generateCallbackInput(param);
+    }
+
     if (inputType.isEnum) {
       return InputUtilWritor.writeInput(
         param: param,
@@ -54,6 +59,10 @@ class InputFieldWritor {
     throw UnimplementedError(
       'Unsupported input type: ${param.inputType?.name}',
     );
+  }
+
+  static String _generateCallbackInput(AnalyzedParameter param) {
+    return InputUtilWritor.writeCallbackInput(param: param);
   }
 
   static String _generateListInput(
@@ -74,12 +83,11 @@ class InputFieldWritor {
     String inputBuilder;
     if (param.listElementCustomInput != null) {
       // Custom input for the element type
-      inputBuilder =
-          '(label) => ${param.listElementCustomInput!.inputClass}(label)';
+      inputBuilder = '(label) => ${param.listElementCustomInput!.inputClass}(label, isNullable: ${param.isNullable})';
     } else if (elementType.isEnum) {
       // Enum type
       inputBuilder =
-          '(label) => UiPlaygroundEnumInput<$elementTypeName>(label, options: $elementTypeName.values)';
+          '(label) => UiPlaygroundEnumInput<$elementTypeName>(label, isNullable: ${param.isNullable}, options: $elementTypeName.values)';
     } else {
       // Standard input type
       final elementInputClass = _inputTypeToClass.getInputTypeClass(
@@ -88,7 +96,7 @@ class InputFieldWritor {
       if (elementInputClass == null) {
         return '  // Unsupported list element type: $elementTypeName';
       }
-      inputBuilder = '(label) => $elementInputClass(label)';
+      inputBuilder = '(label) => $elementInputClass(label, isNullable: ${param.isNullable})';
     }
 
     return InputUtilWritor.writeListInput(

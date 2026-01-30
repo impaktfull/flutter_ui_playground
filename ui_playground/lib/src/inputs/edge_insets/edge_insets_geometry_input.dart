@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:impaktfull_ui/impaktfull_ui.dart';
 import 'package:ui_playground/src/model/item/playground_inputs.dart';
 
-class UiPlaygroundEdgeInsetsGeometryInput
-    extends UiPlaygroundInputItem<EdgeInsetsGeometry> {
+class UiPlaygroundEdgeInsetsGeometryInput extends UiPlaygroundInputItem<EdgeInsetsGeometry> {
   final List<EdgeInsetsGeometry> options;
 
   @override
@@ -11,6 +10,7 @@ class UiPlaygroundEdgeInsetsGeometryInput
 
   UiPlaygroundEdgeInsetsGeometryInput(
     super.label, {
+    required super.isNullable,
     this.options = const [
       EdgeInsets.all(2),
       EdgeInsets.all(4),

@@ -16,6 +16,7 @@ class UiPlaygroundIconInput extends UiPlaygroundInputItem<IconData> {
 
   UiPlaygroundIconInput(
     super.label, {
+    required super.isNullable,
     super.initialValue,
     super.extraInfo,
   });
@@ -34,17 +35,16 @@ class UiPlaygroundIconInput extends UiPlaygroundInputItem<IconData> {
             onTap: () => _controller.open(),
           ),
           items: items,
-          itemBuilder: (context, item, index, controller) =>
-              ImpaktfullUiTouchFeedback(
-                onTap: () {
-                  updateState(item.value);
-                  _controller.close();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Icon(item.value),
-                ),
-              ),
+          itemBuilder: (context, item, index, controller) => ImpaktfullUiTouchFeedback(
+            onTap: () {
+              updateState(item.value);
+              _controller.close();
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Icon(item.value),
+            ),
+          ),
           noDataLabel: 'No icons',
         ),
       ),

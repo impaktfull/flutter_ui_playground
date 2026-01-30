@@ -10,6 +10,7 @@ class UiPlaygroundEnumInput<T extends Enum> extends UiPlaygroundInputItem<T> {
 
   UiPlaygroundEnumInput(
     super.label, {
+    required super.isNullable,
     required this.options,
     super.initialValue,
     super.extraInfo,

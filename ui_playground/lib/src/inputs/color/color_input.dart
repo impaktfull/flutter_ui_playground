@@ -9,6 +9,7 @@ class UiPlaygroundColorInput extends UiPlaygroundInputItem<Color> {
 
   UiPlaygroundColorInput(
     super.label, {
+    required super.isNullable,
     super.initialValue,
     super.extraInfo,
   });
