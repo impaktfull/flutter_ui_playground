@@ -19,8 +19,10 @@ class UiPlaygroundTheme {
 
   static Color get secondaryColor => _impaktfullUiTheme!.colors.secondary;
 
-  static TextStyle get textOnAccentColor => _impaktfullUiTheme!.textStyles.onAccent.text.medium;
-  static TextStyle get textOnSecondaryColor => _impaktfullUiTheme!.textStyles.onSecondary.text.medium;
+  static TextStyle get textOnAccentColor =>
+      _impaktfullUiTheme!.textStyles.onAccent.text.medium;
+  static TextStyle get textOnSecondaryColor =>
+      _impaktfullUiTheme!.textStyles.onSecondary.text.medium;
 
   const UiPlaygroundTheme({
     required Color primaryColor,

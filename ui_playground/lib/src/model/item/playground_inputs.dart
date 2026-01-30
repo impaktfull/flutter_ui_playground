@@ -55,7 +55,12 @@ abstract class UiPlaygroundInputItem<T> {
   final String? extraInfo;
   final _listeners = <VoidCallback>{};
 
-  UiPlaygroundInputItem(this.label, {required this.isNullable, this.initialValue, this.extraInfo}) : _value = initialValue;
+  UiPlaygroundInputItem(
+    this.label, {
+    required this.isNullable,
+    this.initialValue,
+    this.extraInfo,
+  }) : _value = initialValue;
 
   T? get defaultValue;
 

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:impaktfull_ui/impaktfull_ui.dart';
 import 'package:ui_playground/src/model/item/playground_inputs.dart';
 
-class UiPlaygroundEdgeInsetsGeometryInput extends UiPlaygroundInputItem<EdgeInsetsGeometry> {
+class UiPlaygroundEdgeInsetsGeometryInput
+    extends UiPlaygroundInputItem<EdgeInsetsGeometry> {
   final List<EdgeInsetsGeometry> options;
 
   @override
@@ -27,6 +28,14 @@ class UiPlaygroundEdgeInsetsGeometryInput extends UiPlaygroundInputItem<EdgeInse
     return StatefulBuilder(
       builder: (context, setState) => ImpaktfullUiSeparatedColumn(
         children: [
+          if (isNullable) ...[
+            ImpaktfullUiRadioButtonListItem(
+              title: 'null',
+              value: null,
+              groupValue: value,
+              onChanged: updateState,
+            ),
+          ],
           for (final item in options) ...[
             ImpaktfullUiRadioButtonListItem(
               title: item.toString(),

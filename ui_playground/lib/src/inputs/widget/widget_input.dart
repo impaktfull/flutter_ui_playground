@@ -30,7 +30,13 @@ class UiPlaygroundWidgetInput extends UiPlaygroundInputItem<Widget> {
     ),
   ];
   final List<Widget>? _options;
-  List<Widget> get options => _options ?? _fallbackOptions;
+  List<Widget?> get options {
+    return [
+      if (isNullable) ...[null],
+      ...(_options ?? _fallbackOptions),
+    ];
+  }
+
   int? _index;
 
   int? get _selectedIndex {
@@ -82,7 +88,7 @@ class UiPlaygroundWidgetInput extends UiPlaygroundInputItem<Widget> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
-                          child: item,
+                          child: item ?? Text('null'),
                         ),
                         IgnorePointer(
                           child: ImpaktfullUiRadioButton(

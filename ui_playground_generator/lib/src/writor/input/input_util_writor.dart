@@ -43,14 +43,18 @@ class InputUtilWritor {
     final returnType = funcInfo.returnTypeName;
 
     // Build the parameter list for the lambda
-    final paramList = params.isEmpty ? '' : params.map((p) => p.name).join(', ');
+    final paramList = params.isEmpty
+        ? ''
+        : params.map((p) => p.name).join(', ');
 
     // Build the notification message with parameter values
     String message;
     if (params.isEmpty) {
       message = '$paramName()';
     } else {
-      final paramValues = params.map((p) => '${p.name}: \$${p.name}').join(', ');
+      final paramValues = params
+          .map((p) => '${p.name}: \$${p.name}')
+          .join(', ');
       message = '$paramName($paramValues)';
     }
 
@@ -110,7 +114,9 @@ class InputUtilWritor {
     sb.write("    '$label',\n");
     sb.write("    isNullable: ${param.isNullable},\n");
     if (funcInfo != null && funcInfo.parameters.isNotEmpty) {
-      final paramNames = funcInfo.parameters.map((p) => "'${p.name}'").join(', ');
+      final paramNames = funcInfo.parameters
+          .map((p) => "'${p.name}'")
+          .join(', ');
       sb.write("    parameterNames: [$paramNames],\n");
     }
 

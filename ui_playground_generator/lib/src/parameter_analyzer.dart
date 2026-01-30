@@ -177,7 +177,8 @@ class ParameterAnalyzer {
 
       // Determine custom input by type name: per-component takes precedence over global
       final typeName = _getTypeName(param.type);
-      final customInput = customInputs[typeName] ?? globalCustomInputs[typeName];
+      final customInput =
+          customInputs[typeName] ?? globalCustomInputs[typeName];
 
       // Skip types that extend ImpaktfullUiComponentTheme (theme override parameters)
       if (TypeUtil.extendsImpaktfullUiComponentTheme(
@@ -252,7 +253,9 @@ class ParameterAnalyzer {
         final elementType = typeArgs.first;
         listElementTypeName = _getTypeName(elementType);
         // Check if there's a custom input for the element type
-        listElementCustomInput = customInputs[listElementTypeName] ?? globalCustomInputs[listElementTypeName];
+        listElementCustomInput =
+            customInputs[listElementTypeName] ??
+            globalCustomInputs[listElementTypeName];
       }
     }
 
@@ -302,7 +305,9 @@ class ParameterAnalyzer {
       final paramTypeName = funcParam.type.getDisplayString();
       // Use the parameter name if available, otherwise generate one (arg0, arg1, etc.)
       final funcParamName = funcParam.name;
-      final paramName = (funcParamName != null && funcParamName.isNotEmpty) ? funcParamName : 'arg$i';
+      final paramName = (funcParamName != null && funcParamName.isNotEmpty)
+          ? funcParamName
+          : 'arg$i';
       parameters.add(
         FunctionParameterInfo(
           name: paramName,
@@ -369,7 +374,9 @@ class ParameterAnalyzer {
         final elementTypeName = _getTypeName(elementType);
 
         // Check if there's a custom input for the element type
-        final elementCustomInput = customInputs[elementTypeName] ?? globalCustomInputs[elementTypeName];
+        final elementCustomInput =
+            customInputs[elementTypeName] ??
+            globalCustomInputs[elementTypeName];
 
         InputType? elementInputType;
         if (elementCustomInput != null) {

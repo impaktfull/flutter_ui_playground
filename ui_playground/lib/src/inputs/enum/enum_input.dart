@@ -21,6 +21,14 @@ class UiPlaygroundEnumInput<T extends Enum> extends UiPlaygroundInputItem<T> {
     return StatefulBuilder(
       builder: (context, setState) => ImpaktfullUiSeparatedColumn(
         children: [
+          if (isNullable) ...[
+            ImpaktfullUiRadioButtonListItem(
+              title: 'null',
+              value: null,
+              groupValue: value,
+              onChanged: updateState,
+            ),
+          ],
           for (final item in options) ...[
             ImpaktfullUiRadioButtonListItem(
               title: item.name,

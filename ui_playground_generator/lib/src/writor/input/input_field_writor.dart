@@ -83,7 +83,8 @@ class InputFieldWritor {
     String inputBuilder;
     if (param.listElementCustomInput != null) {
       // Custom input for the element type
-      inputBuilder = '(label) => ${param.listElementCustomInput!.inputClass}(label, isNullable: ${param.isNullable})';
+      inputBuilder =
+          '(label) => ${param.listElementCustomInput!.inputClass}(label, isNullable: ${param.isNullable})';
     } else if (elementType.isEnum) {
       // Enum type
       inputBuilder =
@@ -96,7 +97,8 @@ class InputFieldWritor {
       if (elementInputClass == null) {
         return '  // Unsupported list element type: $elementTypeName';
       }
-      inputBuilder = '(label) => $elementInputClass(label, isNullable: ${param.isNullable})';
+      inputBuilder =
+          '(label) => $elementInputClass(label, isNullable: ${param.isNullable})';
     }
 
     return InputUtilWritor.writeListInput(

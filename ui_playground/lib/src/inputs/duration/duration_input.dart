@@ -36,6 +36,14 @@ class UiPlaygroundDurationInput extends UiPlaygroundInputItem<Duration> {
     return StatefulBuilder(
       builder: (context, setState) => ImpaktfullUiSeparatedColumn(
         children: [
+          if (isNullable) ...[
+            ImpaktfullUiRadioButtonListItem(
+              title: 'null',
+              value: null,
+              groupValue: value,
+              onChanged: updateState,
+            ),
+          ],
           for (final item in options) ...[
             ImpaktfullUiRadioButtonListItem(
               title: item.toString(),

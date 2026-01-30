@@ -4,6 +4,7 @@ import 'package:ui_playground/src/model/item/playground_inputs.dart';
 import 'package:ui_playground/src/model/item/playground_item.dart';
 import 'package:ui_playground/src/model/item/playground_variant.dart';
 import 'package:ui_playground/src/widget/input/inputs_widget.dart';
+import 'package:ui_playground/src/widget/playground/playground_preview.dart';
 
 class UiPlaygroundWidget extends StatefulWidget {
   final UiPlaygroundItem item;
@@ -21,7 +22,6 @@ class UiPlaygroundWidget extends StatefulWidget {
 
 class _UiPlaygroundWidgetState extends State<UiPlaygroundWidget> {
   late final UiPlaygroundInputs inputs;
-
   @override
   void initState() {
     inputs = widget.variant.inputs();
@@ -41,11 +41,9 @@ class _UiPlaygroundWidgetState extends State<UiPlaygroundWidget> {
       small: (context) => ImpaktfullUiAutoLayout.vertical(
         children: [
           Expanded(
-            child: Center(
-              child: widget.variant.build(
-                context,
-                inputs,
-              ),
+            child: PlaygroundPreview(
+              variant: widget.variant,
+              inputs: inputs,
             ),
           ),
           ImpaktfullUiDivider(),
@@ -61,11 +59,9 @@ class _UiPlaygroundWidgetState extends State<UiPlaygroundWidget> {
       medium: (context) => ImpaktfullUiAutoLayout.horizontal(
         children: [
           Expanded(
-            child: Center(
-              child: widget.variant.build(
-                context,
-                inputs,
-              ),
+            child: PlaygroundPreview(
+              variant: widget.variant,
+              inputs: inputs,
             ),
           ),
           ImpaktfullUiDivider(vertical: true),

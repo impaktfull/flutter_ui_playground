@@ -24,7 +24,9 @@ class UiPlaygroundCallbackInput extends UiPlaygroundInputItem<Function> {
   @override
   Widget build(BuildContext context) {
     final theme = ImpaktfullUiTheme.of(context);
-    final paramInfo = parameterNames.isEmpty ? 'No parameters' : 'Parameters: ${parameterNames.join(', ')}';
+    final paramInfo = parameterNames.isEmpty
+        ? 'No parameters'
+        : 'Parameters: ${parameterNames.join(', ')}';
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
