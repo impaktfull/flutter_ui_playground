@@ -1,3 +1,7 @@
+# 0.0.6
+
+- Version bump to keep packages in sync
+
 # 0.0.5
 
 - Version bump to keep packages in sync

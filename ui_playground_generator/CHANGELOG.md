@@ -1,3 +1,9 @@
+# 0.0.6
+
+## Added
+
+- Support for callback parameter types (e.g., `VoidCallback`, `ValueChanged<T>`)
+
 # 0.0.5
 
 ## Added

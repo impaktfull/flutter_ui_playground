@@ -1,6 +1,6 @@
 name: ui_playground
 description: "A Flutter package that provides an interactive playground for testing and showcasing UI components."
-version: 0.0.5
+version: 0.0.6
 homepage: https://github.com/impaktfull/flutter_ui_playground
 
 environment:

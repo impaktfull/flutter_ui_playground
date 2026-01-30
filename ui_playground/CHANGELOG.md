@@ -1,3 +1,14 @@
+# 0.0.6
+
+## Added
+
+- Zoom controls with +/- buttons (25%-400% range)
+- Pan/drag support for component preview via `InteractiveViewer`
+- Center-based zoom that maintains viewport focus
+- Reset button to restore default zoom and position
+- Nullable parameter support for all input types (shows "null" option when `isNullable: true`)
+- New input types: `UiPlaygroundDurationInput`
+
 # 0.0.5
 
 ## Added
