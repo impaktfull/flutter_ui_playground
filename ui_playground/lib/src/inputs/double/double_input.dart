@@ -53,7 +53,7 @@ class UiPlaygroundDoubleInput extends UiPlaygroundInputItem<double> {
   Widget build(BuildContext context) {
     return StatefulBuilder(
       builder: (context, setState) => ImpaktfullUiNumberInput<double>(
-        value: value ?? 0.0,
+        value: valueOrDefault ?? 0.0,
         onChanged: (value) => updateState(value),
       ),
     );

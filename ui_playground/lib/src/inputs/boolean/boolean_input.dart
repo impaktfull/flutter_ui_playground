@@ -4,7 +4,7 @@ import 'package:ui_playground/src/model/item/playground_inputs.dart';
 
 class UiPlaygroundBooleanInput extends UiPlaygroundInputItem<bool> {
   @override
-  bool? get defaultValue => false;
+  bool? get defaultValue => isNullable ? null : false;
 
   UiPlaygroundBooleanInput(
     super.label, {
@@ -35,12 +35,12 @@ class UiPlaygroundBooleanInput extends UiPlaygroundInputItem<bool> {
   Widget build(BuildContext context) {
     if (isNullable) {
       return ImpaktfullUiCheckBox.indermediate(
-        value: value,
+        value: valueOrDefault,
         onChanged: updateState,
       );
     }
     return ImpaktfullUiCheckBox(
-      value: value ?? false,
+      value: valueOrDefaultRequired,
       onChanged: updateState,
     );
   }

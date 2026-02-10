@@ -53,7 +53,7 @@ class UiPlaygroundIntInput extends UiPlaygroundInputItem<int> {
   Widget build(BuildContext context) {
     return StatefulBuilder(
       builder: (context, setState) => ImpaktfullUiNumberInput<int>(
-        value: value ?? 0,
+        value: valueOrDefault ?? 0,
         onChanged: (value) => updateState(value),
       ),
     );

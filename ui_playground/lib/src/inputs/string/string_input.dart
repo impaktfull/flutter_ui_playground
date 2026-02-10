@@ -4,7 +4,7 @@ import 'package:ui_playground/src/model/item/playground_inputs.dart';
 
 class UiPlaygroundStringInput extends UiPlaygroundInputItem<String> {
   @override
-  String? get defaultValue => '{$label}';
+  String? get defaultValue => isNullable ? null : '{$label}';
 
   UiPlaygroundStringInput(
     super.label, {
@@ -17,7 +17,7 @@ class UiPlaygroundStringInput extends UiPlaygroundInputItem<String> {
   Widget build(BuildContext context) {
     return StatefulBuilder(
       builder: (context, setState) => ImpaktfullUiInputField(
-        value: value,
+        value: valueOrDefault,
         onChanged: (value) => updateState(value),
       ),
     );
@@ -25,7 +25,7 @@ class UiPlaygroundStringInput extends UiPlaygroundInputItem<String> {
 
   @override
   void updateState(String? value) {
-    if (value == null || value.isEmpty) {
+    if (value== null || value.isEmpty) {
       super.updateState(null);
     } else {
       super.updateState(value);
