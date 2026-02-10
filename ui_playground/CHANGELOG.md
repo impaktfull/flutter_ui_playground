@@ -1,3 +1,9 @@
+# 0.0.7
+
+## Changed
+
+- Enum input now displays as a button that opens a searchable modal dialog instead of inline radio buttons
+
 # 0.0.6
 
 ## Added

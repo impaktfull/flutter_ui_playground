@@ -25,7 +25,7 @@ class UiPlaygroundStringInput extends UiPlaygroundInputItem<String> {
 
   @override
   void updateState(String? value) {
-    if (value== null || value.isEmpty) {
+    if (value == null || value.isEmpty) {
       super.updateState(null);
     } else {
       super.updateState(value);
