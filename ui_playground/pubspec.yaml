@@ -1,6 +1,6 @@
 name: ui_playground
 description: "A Flutter package that provides an interactive playground for testing and showcasing UI components."
-version: 0.0.7
+version: 0.0.8
 homepage: https://github.com/impaktfull/flutter_ui_playground
 
 environment:
@@ -10,8 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  impaktfull_ui: ^0.78.0
-  phosphor_flutter: ^2.1.0
+  impaktfull_ui: ^0.79.1
+  phosphoricons_flutter: ^1.1.1
   ui_playground_annotations: ^0.0.2
 
 dev_dependencies:

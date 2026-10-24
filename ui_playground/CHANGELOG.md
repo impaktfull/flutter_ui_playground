@@ -1,3 +1,10 @@
+# 0.0.8
+
+## Changed
+
+- Replaced `phosphor_flutter` with `phosphoricons_flutter`, so apps can build on Flutter 3.44 and newer (`IconData` became a `final` class, which `phosphor_flutter` extends). The icon input no longer offers the duotone style.
+- `impaktfull_ui` ^0.79.1, the first version without `phosphor_flutter`.
+
 # 0.0.7
 
 ## Changed
