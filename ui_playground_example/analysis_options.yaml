@@ -7,6 +7,11 @@ analyzer:
     - "**.g.dart"
     - "**.config.dart"
     - "**.navigator.dart"
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - macos/**
     # - "**.ui_playground.dart"
   language:
     strict-casts: true
